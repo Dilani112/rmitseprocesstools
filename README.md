@@ -14,9 +14,9 @@ Tuesday 5:30 - 7:30
 Mohammad
 
 ## Links to the tools
-[Trello](https://trello.com/b/dkapK4fY/se-process-tools)
-[Slack](https://seprocesstools.slack.com)
-[Github](https://github.com/thejanasatan/rmitseprocesstools)
+[Trello](https://trello.com/b/dkapK4fY/se-process-tools)  
+[Slack](https://seprocesstools.slack.com)  
+[Github](https://github.com/thejanasatan/rmitseprocesstools)  
 
 -----
 
