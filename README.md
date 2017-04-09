@@ -8,5 +8,15 @@ Dilani Fernando (s3450915) [s3450915@student.rmit.edu.au]
 Lip Yang Koay (s3613979) [s3613979@student.rmit.edu.au]  
 Jake Westrip (s3559660) [s3559660@student.rmit.edu.au]
 
+## Tutorial Session
+
+Tuesday 5:30 - 7:30
+Mohammad
+
+## Links to the tools
+[Trello](https://trello.com/b/dkapK4fY/se-process-tools)
+[Slack](https://seprocesstools.slack.com)
+[Github](https://github.com/thejanasatan/rmitseprocesstools)
+
 -----
 
