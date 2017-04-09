@@ -4,71 +4,50 @@ package view;/*
  * and open the template in the editor.
  */
 
+import controller.AuthController;
+
 import java.util.Scanner;
-/**
- *
- * @author billy
- */
+
 public class App {
     
     public static void main(String[] args){
+
+        // Controller objects
+        AuthController authCtrl = new AuthController();
         Scanner in = new Scanner(System.in);
         System.out.println("WELCOME TO THE APPOINTMENT BOOKING SYSTEM");
         System.out.println("\nPlease Select one of these options to continue:\n1. Login\n2. Register\n0. Quit");
         int option = in.nextInt();
-        
-        
+
         switch(option){
             case 1:{
+                String email,password;
                 System.out.print("Please enter your email: ");
-                Scanner next = new Scanner(System.in);
-                next.nextLine();
+                email = in.next();
                 System.out.print("Please enter your password: ");
-                next.nextLine();
-                // Call the login function to log in
-                // if login successful: 
-                System.out.println("\nMain Menu");
-                System.out.println("_____________");
-                System.out.println("What are you going to do today?\n\n1. View Available Time\n2. Booking/Cancel\n3. View Your Booking Time\n");
-                
-                int selection=in.nextInt();
-                switch(selection){
-                    case 1:
-                      boolean status = false;
-                      do{
-                         status = viewAvailability(in);
-                      }while(!status);
-                break;
-                
-                    case 2:
-                      do{
-                         status = bookingCancel(in);
-                      }while(!status);
-                break;
-                
-                    case 3:
-                        viewBooking(in);
-                break;
-                }
+                password = in.next();
+                if(authCtrl.login(email,password)) showMenu(in);
                 break;
             }
             case 2: {
                 System.out.println("Please enter the following info to register:");
-                System.out.print("\nUsername: ");
+
+                System.out.print("\nEmail: ");
                 Scanner next = new Scanner(System.in);
-                next.nextLine();
+                String email = next.nextLine();
                 System.out.print("Name: ");
-                next.nextLine();
+                String password = next.nextLine();
+                System.out.print("Name: ");
+                String name = next.nextLine();
                 System.out.print("Address: ");
-                next.nextLine();
-                System.out.print("Email Address: ");
-                next.nextLine();
+                String address = next.nextLine();
                 System.out.print("Contact Number: ");
-                next.nextLine();
-                System.out.print("Question: ");
-                next.nextLine();
+                String phone = next.nextLine();
+                System.out.print("Secret Question: ");
+                String q = next.nextLine();
                 System.out.print("Answer: ");
-                next.nextLine();
+                String a = next.nextLine();
+                if(authCtrl.register(email,password,name,address,phone,q,a)) showMenu(in);
                 break;
             }
             case 0: {
@@ -77,7 +56,32 @@ public class App {
             }
         }
     }
-    
+  
+    public static void showMenu(Scanner in) {
+        System.out.println("\nMain Menu");
+        System.out.println("_____________");
+        System.out.println("What are you going to do today?\n\n1. View Available Time\n2. Booking/Cancel\n3. View Your Booking Time\n");
+
+        int selection=in.nextInt();
+        switch(selection){
+            case 1:
+                boolean status = false;
+                do{
+                    status = viewAvailability(in);
+                }while(!status);
+                break;
+
+            case 2:
+                do{
+                    status = bookingCancel(in);
+                }while(!status);
+                break;
+
+            case 3:
+                viewBooking(in);
+                break;
+        }
+    }
     public static boolean viewAvailability(Scanner in){
         System.out.println("What kind of business are you looking for?");
         in.nextLine();

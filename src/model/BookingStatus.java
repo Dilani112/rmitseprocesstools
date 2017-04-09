@@ -1,4 +1,4 @@
-package rmitseprocesstools.model;
+package model;
 
 public enum BookingStatus {
 	PLANNED, CONFIRMED, COMPLETED

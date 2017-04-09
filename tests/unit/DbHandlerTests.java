@@ -1,4 +1,3 @@
-package rmitseprocesstools.test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.Connection;
@@ -14,13 +13,14 @@ import org.junit.internal.runners.statements.Fail;
 import org.junit.rules.ExpectedException;
 import org.sqlite.SQLiteException;
 
-import rmitseprocesstools.DbHandler;
-import rmitseprocesstools.model.Booking;
-import rmitseprocesstools.model.BookingStatus;
-import rmitseprocesstools.model.Business;
-import rmitseprocesstools.model.Customer;
-import rmitseprocesstools.model.Employee;
-import rmitseprocesstools.model.Schedule;
+import controller.DbHandler;
+import model.Booking;
+import model.BookingStatus;
+import model.Business;
+import model.Customer;
+import model.Employee;
+import model.Schedule;
+
 
 public class DbHandlerTests {
 	Connection c = null;
