@@ -8,12 +8,13 @@ import java.util.List;
 
 import org.sqlite.SQLiteException;
 
-import rmitseprocesstools.model.Booking;
-import rmitseprocesstools.model.BookingStatus;
-import rmitseprocesstools.model.Business;
-import rmitseprocesstools.model.Customer;
-import rmitseprocesstools.model.Employee;
-import rmitseprocesstools.model.Schedule;
+import model.Booking;
+
+import model.BookingStatus;
+import model.Business;
+import model.Customer;
+import model.Employee;
+import model.Schedule;
 
 public class DbHandler
 {

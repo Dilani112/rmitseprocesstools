@@ -1,3 +1,6 @@
+#DB files
+*.db
+
 #Compiled class file
 *.class
 

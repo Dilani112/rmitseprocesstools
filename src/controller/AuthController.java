@@ -1,41 +1,106 @@
 package controller;
 
+import model.Business;
+import model.Customer;
 import model.User;
 
+import java.util.Iterator;
+import java.util.List;
+
 public class AuthController {
+    private Customer currentUser;
 
-    private User currentUser = null;
+//    public AuthController() {
+//        Customer n = new Customer();
+//        n.setCustomerId(0);
+//        n.setUsername("thejana@outlook.com");
+//        n.setPassword("password");
+//        n.setName("Thejana");
+//        n.setAddress("295 State Road");
+//        n.setPhone("0942342311");
+//        n.setQuestion("What's your pet's name?");
+//        n.setAnswer("Fuss");
+//
+//        DbHandler.SaveCustomer(n);
+//    }
 
-    public User getCurrentUser() {
-        return this.currentUser;
+    public boolean register(String email, String password, String name, String address, String phone, String q, String a){
+        Customer n = new Customer();
+
+        boolean status = false;
+
+        n.setCustomerId(0);
+        status = n.setUsername(email);
+        status = n.setPassword(password);
+        status = n.setName(name);
+        status = n.setAddress(address);
+        status = n.setPhone(address);
+        status = n.setQuestion(q);
+        status = n.setAnswer(a);
+
+        DbHandler.SaveCustomer(n);
+
+        return status;
     }
+
     public boolean login(String email, String password) {
-        return false;
-    }
+        List<Customer> customers = DbHandler.GetCustomers();
+        List<Business> businesses = DbHandler.GetBusinesses();
 
-    public boolean register(String email, String password, String fname, String lname) {
-        User usr = new User();
-        if(usr.setEmail(email) && usr.setPassword(password) && usr.setFname(fname) && usr.setLname(lname)){
-            this.currentUser = usr;
-            return true;
+        Iterator<Customer> itr = customers.iterator();
+
+        while(itr.hasNext()){
+            Customer cur = itr.next();
+            if(cur.getUsername() == email && cur.getPassword() == password) {
+                currentUser = cur;
+                return true;
+            }
         }
         return false;
     }
 
-    public boolean checkIfActive(String email) {
-        if(this.currentUser != null && this.currentUser.getEmail() == email) {
-            return true;
+    private Customer queryCustomer(String input) {
+        List<Customer> customers = DbHandler.GetCustomers();
+
+        Iterator<Customer> itr = customers.iterator();
+
+        Customer temp;
+
+        while(itr.hasNext()){
+            temp = itr.next();
+            if(temp.getUsername() == input) {
+                return temp;
+            }
         }
-        return false;
+        return null;
     }
 
-    public boolean resetPassword(String email, String password) {
-        if(currentUser != null && currentUser.getEmail() == email) {
-            currentUser.setPassword(password);
-//            currentUser.persist();
-            return true;
-        }
-        return false;
+//    public boolean resetPassword(String email, String password, String ques, String ans) {
+//        Customer customer = queryCustomer(email);
+//
+//        if (customer == null) {
+//            return false;
+//        }
+//
+//        if (customer.getQuestion() == ques && customer.getAnswer() == ans) {
+//            customer.setPassword(password);
+//            DbHandler.SaveCustomer(customer);
+//            return true;
+//        }
+//        return false;
+//    }
+
+    public Customer getActiveUser() {
+        return currentUser;
     }
+
+//    public boolean logout() {
+//        if(currentUser != null){
+//            currentUser = null;
+//            return true;
+//        }
+//
+//        return false;
+//    }
 
 }

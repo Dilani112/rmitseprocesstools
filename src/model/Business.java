@@ -1,4 +1,4 @@
-package rmitseprocesstools.model;
+package model;
 
 public class Business extends User {
 	public int BusinessId;
