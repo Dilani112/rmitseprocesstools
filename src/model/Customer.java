@@ -1,4 +1,4 @@
-package rmitseprocesstools.model;
+package model;
 
 public class Customer extends User {
 	public int CustomerId;

@@ -1,4 +1,4 @@
-package rmitseprocesstools.model;
+package model;
 
 public abstract class User {
 	public String Username;
