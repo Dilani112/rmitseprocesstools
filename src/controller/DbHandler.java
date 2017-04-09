@@ -9,7 +9,6 @@ import java.util.List;
 import org.sqlite.SQLiteException;
 
 import model.Booking;
-
 import model.BookingStatus;
 import model.Business;
 import model.Customer;
@@ -27,19 +26,19 @@ public class DbHandler
 		c = con;
 	}
 	
-  private static void Init()
-  {
-	  if(c == null)
-	  {
-    try {
-      Class.forName("org.sqlite.JDBC");
-      c = DriverManager.getConnection("jdbc:sqlite:main.db");
-    } catch ( Exception e ) {
-      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-      System.exit(0);
+private static void Init()
+{
+    if(c == null)
+    {
+        try {
+          Class.forName("org.sqlite.JDBC");
+          c = DriverManager.getConnection("jdbc:sqlite:main.db");
+        } catch ( Exception e ) {
+          System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+          System.exit(0);
+        }
     }
-	  }
-  }
+}
   
   //-----------------------Employee------------------------
   
@@ -283,6 +282,30 @@ public class DbHandler
       return returnList;
   }
   
+  public static Schedule GetSchedule(int id)
+  {
+	  Init();
+	  Schedule returnVal = new Schedule();
+	  
+	  try {
+		  p = c.prepareStatement("SELECT * FROM Schedule where ScheduleId = ?");
+		  p.setInt(1, id);
+		  ResultSet rs = p.executeQuery();
+		  while ( rs.next() && rs.isFirst() ) {
+			  returnVal.ScheduleId = rs.getInt("ScheduleId");
+			  returnVal.BusinessId = rs.getInt("BusinessId");
+			  returnVal.StartDateTime = LocalDateTime.ofEpochSecond(rs.getInt("StartDateTime"), 0, ZoneOffset.ofHours(10));
+			  returnVal.EndDateTime = LocalDateTime.ofEpochSecond(rs.getInt("EndDateTime"), 0, ZoneOffset.ofHours(10));
+		  }
+		  rs.close();
+		  s.close();
+	  } catch (Exception ex) {
+		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+	  }
+      
+      return returnVal;
+  }
+  
   public static void SaveSchedule(Schedule s)
   {
 	  Init();
@@ -333,18 +356,11 @@ public class DbHandler
 			  Booking temp = new Booking();
     	 
 			  temp.BookingId = rs.getInt("BookingId");
-			  temp.Status = BookingStatus.values()[rs.getInt("Status")];
-			  temp.ScheduleIds = new ArrayList<Integer>();
-    	 
-			  p = c.prepareStatement("select ScheduleId from BookingSchedule where BookingId = ?");
-			  p.setInt(1, temp.BookingId);
-			  ResultSet rs2 = p.executeQuery();
-			  while(rs2.next()) {
-				  temp.ScheduleIds.add(rs2.getInt("ScheduleId"));
-			  }
-			  rs2.close();
-			  p.close();
-			  
+                          temp.ScheduleId = rs.getInt("ScheduleId");
+                          temp.PersonForId = rs.getInt("PersonForId");
+			  temp.Status = BookingStatus.values()[rs.getInt("Status")];                          
+                          temp.BookingDate = LocalDateTime.ofEpochSecond(rs.getInt("BookingDate"), 0, ZoneOffset.ofHours(10));
+                          
 			  returnList.add(temp);
 		  }
 		  rs.close();
@@ -359,54 +375,33 @@ public class DbHandler
   public static void SaveBooking(Booking b)
   {
 	  Init();
-	  String sql = "";
+	  String sql =  "";
 	  
 	  try {
 		  if(b.BookingId == 0)
 		  {
-			  sql = "INSERT INTO Booking (Status) " +
-					"VALUES (?)";
+			  sql = "INSERT INTO Booking (ScheduleId,PersonForId,Status,BookingDate) " +
+					"VALUES (?,?,?,?)";
 		  }else{
-			  sql = "UPDATE Booking " +
-		            "SET Status = ? " +
-				    "WHERE BookingId = ?";
+			  sql = "UPDATE Booking SET ScheduleId = ?, PersonForId = ?, Status = ?, BookingDate = ? WHERE BookingId = ?";
 		  }
 		  
-		  p = c.prepareStatement(sql);
-		  
-		  p.setInt(1, b.Status.ordinal());
-		  
+		  p = c.prepareStatement(sql);		  
+		              
+                  p.setInt(1, b.ScheduleId);
+                  p.setInt(2, b.PersonForId);
+                  p.setInt(3, b.Status.ordinal());                  
+                  p.setLong(4, b.BookingDate.toEpochSecond(ZoneOffset.ofHours(10)));
 		  if(b.BookingId != 0)
-			  p.setInt(2, b.BookingId);
+			  p.setInt(5, b.BookingId);
 		  
 		  p.execute();
 		  
 		  if(b.BookingId == 0)
 			  b.BookingId = p.getGeneratedKeys().getInt(1);
-		  
+
 		  p.close();
-		  
-		  for (int s : b.ScheduleIds) {
-			  p = c.prepareStatement("SELECT COUNT(*) as total from BookingSchedule where BookingId = ? AND ScheduleId = ?");
-			  
-			  p.setInt(1, b.BookingId);
-			  p.setInt(2, s);
-			  
-			  ResultSet rs = p.executeQuery();
-			  while(rs.next()) {
-				  if(rs.getInt("total") == 0)
-				  {
-					  PreparedStatement p2 = c.prepareStatement("INSERT INTO BookingSchedule (BookingId, ScheduleId) VALUES (?, ?)");
-					  p2.setInt(1, b.BookingId);
-					  p2.setInt(2, s);
-					  p2.execute();
-					  p2.close();
-				  }
-			  }
-			  
-			  rs.close();
-			  p.close();
-		  }
+		
 	  } catch (Exception ex) {
 		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
 	  } 

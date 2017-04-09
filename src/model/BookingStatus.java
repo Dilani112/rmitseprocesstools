@@ -1,5 +1,5 @@
 package model;
 
 public enum BookingStatus {
-	PLANNED, CONFIRMED, COMPLETED
+	CANCELLED, CONFIRMED, COMPLETED
 }

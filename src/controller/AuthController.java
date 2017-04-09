@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class AuthController {
-    private Customer currentUser;
+    private static Customer currentUser;
 
 //    public AuthController() {
 //        Customer n = new Customer();
@@ -24,7 +24,7 @@ public class AuthController {
 //        DbHandler.SaveCustomer(n);
 //    }
 
-    public boolean register(String email, String password, String name, String address, String phone, String q, String a){
+    public static boolean register(String email, String password, String name, String address, String phone, String q, String a){
         Customer n = new Customer();
 
         boolean status = false;
@@ -43,7 +43,7 @@ public class AuthController {
         return status;
     }
 
-    public boolean login(String email, String password) {
+    public static boolean login(String email, String password) {
         List<Customer> customers = DbHandler.GetCustomers();
         List<Business> businesses = DbHandler.GetBusinesses();
 
@@ -51,7 +51,7 @@ public class AuthController {
 
         while(itr.hasNext()){
             Customer cur = itr.next();
-            if(cur.getUsername() == email && cur.getPassword() == password) {
+            if(cur.getUsername().equals(email) && cur.getPassword().equals(password)) {
                 currentUser = cur;
                 return true;
             }
@@ -59,7 +59,7 @@ public class AuthController {
         return false;
     }
 
-    private Customer queryCustomer(String input) {
+    private static Customer queryCustomer(String input) {
         List<Customer> customers = DbHandler.GetCustomers();
 
         Iterator<Customer> itr = customers.iterator();
@@ -90,7 +90,7 @@ public class AuthController {
 //        return false;
 //    }
 
-    public Customer getActiveUser() {
+    public static Customer getActiveUser() {
         return currentUser;
     }
 
