@@ -14,7 +14,6 @@ public class App {
 
         // Controller objects
         AuthController authCtrl = new AuthController();
-
         Scanner in = new Scanner(System.in);
         System.out.println("WELCOME TO THE APPOINTMENT BOOKING SYSTEM");
         System.out.println("\nPlease Select one of these options to continue:\n1. Login\n2. Register\n0. Quit");
@@ -32,6 +31,7 @@ public class App {
             }
             case 2: {
                 System.out.println("Please enter the following info to register:");
+
                 System.out.print("\nEmail: ");
                 Scanner next = new Scanner(System.in);
                 String email = next.nextLine();
@@ -56,7 +56,7 @@ public class App {
             }
         }
     }
-
+  
     public static void showMenu(Scanner in) {
         System.out.println("\nMain Menu");
         System.out.println("_____________");
@@ -82,7 +82,6 @@ public class App {
                 break;
         }
     }
-
     public static boolean viewAvailability(Scanner in){
         System.out.println("What kind of business are you looking for?");
         in.nextLine();
