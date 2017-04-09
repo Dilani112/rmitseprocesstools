@@ -1,4 +1,3 @@
-package rmitseprocesstools.test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.Connection;
@@ -21,6 +20,7 @@ import model.Business;
 import model.Customer;
 import model.Employee;
 import model.Schedule;
+
 
 public class DbHandlerTests {
 	Connection c = null;
