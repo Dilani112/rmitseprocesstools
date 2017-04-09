@@ -5,15 +5,23 @@ package view;/*
  */
 
 import controller.AuthController;
+import controller.BookingController;
+import model.Booking;
+import model.Schedule;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class App {
     
     public static void main(String[] args){
-
-        // Controller objects
-        AuthController authCtrl = new AuthController();
         Scanner in = new Scanner(System.in);
         System.out.println("WELCOME TO THE APPOINTMENT BOOKING SYSTEM");
         System.out.println("\nPlease Select one of these options to continue:\n1. Login\n2. Register\n0. Quit");
@@ -26,7 +34,7 @@ public class App {
                 email = in.next();
                 System.out.print("Please enter your password: ");
                 password = in.next();
-                if(authCtrl.login(email,password)) showMenu(in);
+                if(AuthController.login(email,password)) showMenu(in);
                 break;
             }
             case 2: {
@@ -47,7 +55,7 @@ public class App {
                 String q = next.nextLine();
                 System.out.print("Answer: ");
                 String a = next.nextLine();
-                if(authCtrl.register(email,password,name,address,phone,q,a)) showMenu(in);
+                if(AuthController.register(email,password,name,address,phone,q,a)) showMenu(in);
                 break;
             }
             case 0: {
@@ -58,14 +66,17 @@ public class App {
     }
   
     public static void showMenu(Scanner in) {
-        System.out.println("\nMain Menu");
-        System.out.println("_____________");
-        System.out.println("What are you going to do today?\n\n1. View Available Time\n2. Booking/Cancel\n3. View Your Booking Time\n");
+        
+        while(true)
+        {
+        	System.out.println("\nMain Menu");
+            System.out.println("_____________");
+            System.out.println("What are you going to do today?\n\n1. View Available Time\n2. Booking/Cancel\n3. View Your Booking Time\n");
 
-        int selection=in.nextInt();
+        	boolean status = false;
+        	int selection=in.nextInt();
         switch(selection){
             case 1:
-                boolean status = false;
                 do{
                     status = viewAvailability(in);
                 }while(!status);
@@ -81,56 +92,82 @@ public class App {
                 viewBooking(in);
                 break;
         }
-    }
-    public static boolean viewAvailability(Scanner in){
-        System.out.println("What kind of business are you looking for?");
-        in.nextLine();
-        if(true){ //has to change the controller when assigned
-            System.out.println("Here are a list of businesses that match your description. Please select one:");
-            System.out.println("Hairdresser, restaurant, library ...");//.....list of businesses
-            in.nextLine();
-            System.out.println("Which day do you want to check availability for?");
-            in.nextLine();
-            System.out.println("Monday, 9:30-10:30,\tBOOKED\n.");//.....list of available time
-            return true;
         }
-        else{
-            System.out.print("Sorry, we didn't find anything that matches your description. Please try again!");
-        }   return false;
+    }
+    
+    public static boolean viewAvailability(Scanner in){
+    	in.nextLine();
+        System.out.println("Which date do you want to check availability for?");
+        System.out.println("Please use the format dd/MM/yyyy eg. 14/04/2017");
+        String dateIn = in.nextLine();
+            
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate ld = LocalDate.parse((CharSequence)dateIn, dtf);
+            
+        List<Schedule> schedules = BookingController.getFreeSchedulesForDate(ld);
+            
+        System.out.println("These timeslots are vacant on " + ld.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + ld.format(dtf) + ":");
+        for (Schedule s : schedules) {
+          	String startTime = s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+            String endTime = s.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+
+           	System.out.println(startTime + " - " + endTime);
+		}
+        return true;
     }
     
     public static boolean bookingCancel(Scanner in){
-        System.out.println("What kind of business are you booking for?");
-        in.nextLine();
-        if(true){ //has to change the controller when assigned
-            System.out.println("Here are a list of businesses that match your description. Please select one:");
-            System.out.println("Hairdresser, restaurant, library ...");//.....list of businesses
-            in.nextLine();
-            System.out.println("Please select your employee: ");
-            System.out.println("James, David, Cassey..."); //list of employees
-            in.nextLine();
-            System.out.println("Here are his/her availability for <day>:");
-            System.out.println("Monday, 9:30-10:30,\tBOOKED\n.");//.....list of available time
-            System.out.println("Which slots do you want to book for?");
-            System.out.println("Wednesday, 10:30-11:30,\tAVAILABLE\n.");//.....list of available time
-            in.nextLine();
-            if(true){
-                System.out.println("Thank you! You have booked your slot!");
-                in.nextLine();
-            }else{
-                System.out.println("Sorry, please try again!");
-                in.nextLine();
-            }
-            return true;
+    	in.nextLine();
+        System.out.println("Which date do you want to check availability for?");
+        System.out.println("Please use the format dd/MM/yyyy eg. 14/04/2017");
+        String dateIn = in.nextLine();
+        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate ld = LocalDate.parse((CharSequence)dateIn, dtf);
+        
+        List<Schedule> schedules = BookingController.getFreeSchedulesForDate(ld);
+        
+        System.out.println("These timeslots are vacant on " + ld.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + ld.format(dtf) + ":");
+        for (Schedule s : schedules) {
+        	String startTime = s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+            String endTime = s.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+
+        	System.out.println(s.ScheduleId + " | " + startTime + " - " + endTime);
+		}
+        System.out.println("Please select one of these timeslots by entering the number preceding the start time.");
+        
+        boolean status = false;
+        while(!status)
+        {
+        	int scheduleIdIn = in.nextInt();
+        	if(scheduleIdIn != 0)
+        	{
+        		BookingController ctrl = new BookingController();
+            	status = ctrl.saveBookingMade(AuthController.getActiveUser().CustomerId, scheduleIdIn);
+            	if(!status)
+            		System.out.println("Invalid input. Please try again or input 0 to cancel.");
+        	}else{
+        		break;
+        	}
         }
-        else{
-            System.out.print("Sorry, we didn't find anything that matches your description. Please try again!");
-        }   return false;
+        
+        return true;
     }
     
     public static void viewBooking(Scanner in){
-        System.out.println("Here is the slot that you've booked for: ");
-        System.out.println("Wednesday, 10:30-11:30,\tBOOKED\n.");
+    	in.nextLine();
+    	List<Schedule> schedules = BookingController.getBookedSchedulesByCustomerId(AuthController.getActiveUser().CustomerId);
+        System.out.println("Here are the timeslots that you've booked: ");
+        
+        for (Schedule s : schedules) {
+        	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        	String date = s.StartDateTime.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + s.StartDateTime.format(dtf);
+        	String startTime = s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+            String endTime = s.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+
+        	System.out.println(date + " " + startTime + " - " + endTime);
+		}
+        
         in.nextLine();
     }
     
