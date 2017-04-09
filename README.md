@@ -18,5 +18,8 @@ Mohammad
 [Slack](https://seprocesstools.slack.com)  
 [Github](https://github.com/thejanasatan/rmitseprocesstools)  
 
+## Functional Design - Class Diagram
+Please follow this [link](https://www.lucidchart.com/invitations/accept/d3e0a282-f72b-4b0a-8d4e-c1dd712b9e14)
+
 -----
 
