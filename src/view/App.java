@@ -43,7 +43,7 @@ public class App {
                 System.out.print("\nEmail: ");
                 Scanner next = new Scanner(System.in);
                 String email = next.nextLine();
-                System.out.print("Name: ");
+                System.out.print("Password: ");
                 String password = next.nextLine();
                 System.out.print("Name: ");
                 String name = next.nextLine();
@@ -105,7 +105,12 @@ public class App {
         LocalDate ld = LocalDate.parse((CharSequence)dateIn, dtf);
             
         List<Schedule> schedules = BookingController.getFreeSchedulesForDate(ld);
-            
+
+        if (schedules.isEmpty()){
+            System.out.println("No vacant timeslots available");
+            return true;
+        }
+
         System.out.println("These timeslots are vacant on " + ld.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + ld.format(dtf) + ":");
         for (Schedule s : schedules) {
           	String startTime = s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
@@ -124,15 +129,22 @@ public class App {
         
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate ld = LocalDate.parse((CharSequence)dateIn, dtf);
-        
+
+        if(ld.isBefore(LocalDate.now())){
+            System.out.println("Can't book an appointment for a date in the past");
+            return false;
+        }
+
         List<Schedule> schedules = BookingController.getFreeSchedulesForDate(ld);
-        
+        int[] arr = new int[100];
+        int ind = 0;
         System.out.println("These timeslots are vacant on " + ld.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + ld.format(dtf) + ":");
         for (Schedule s : schedules) {
         	String startTime = s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
             String endTime = s.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
-
         	System.out.println(s.ScheduleId + " | " + startTime + " - " + endTime);
+        	arr[ind] = s.ScheduleId;
+        	ind++;
 		}
         System.out.println("Please select one of these timeslots by entering the number preceding the start time.");
         
@@ -142,10 +154,18 @@ public class App {
         	int scheduleIdIn = in.nextInt();
         	if(scheduleIdIn != 0)
         	{
+        	    for(int v = 0; v<arr.length;v++){
+        	        if(arr[v] == scheduleIdIn){
+        	            continue;
+                    }else {
+        	            System.out.println("Invalid Input");
+        	            return false;
+                    }
+                }
         		BookingController ctrl = new BookingController();
             	status = ctrl.saveBookingMade(AuthController.getActiveUser().CustomerId, scheduleIdIn);
             	if(!status)
-            		System.out.println("Invalid input. Please try again or input 0 to cancel.");
+            		System.out.println("Invalid input or a Double Booking. Please try again or input 0 to cancel.");
         	}else{
         		break;
         	}
@@ -157,15 +177,24 @@ public class App {
     public static void viewBooking(Scanner in){
     	in.nextLine();
     	List<Schedule> schedules = BookingController.getBookedSchedulesByCustomerId(AuthController.getActiveUser().CustomerId);
-        System.out.println("Here are the timeslots that you've booked: ");
-        
-        for (Schedule s : schedules) {
-        	DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        	String date = s.StartDateTime.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + s.StartDateTime.format(dtf);
-        	String startTime = s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
-            String endTime = s.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
 
-        	System.out.println(date + " " + startTime + " - " + endTime);
+
+        if(schedules.isEmpty()){
+            System.out.println("No bookings available");
+            return;
+        }
+
+        System.out.println("Here are the timeslots that you've booked: ");
+
+        for (Schedule s : schedules) {
+            if (s != null) {
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                String date = s.StartDateTime.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + s.StartDateTime.format(dtf);
+                String startTime = s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+                String endTime = s.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+
+                System.out.println(date + " " + startTime + " - " + endTime);
+            }
 		}
         
         in.nextLine();

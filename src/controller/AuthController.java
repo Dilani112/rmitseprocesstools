@@ -39,6 +39,7 @@ public class AuthController {
         status = n.setAnswer(a);
 
         DbHandler.SaveCustomer(n);
+        currentUser = n;
 
         return status;
     }
