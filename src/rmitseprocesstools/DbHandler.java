@@ -6,14 +6,13 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sqlite.SQLiteException;
-
 import rmitseprocesstools.model.Booking;
 import rmitseprocesstools.model.BookingStatus;
 import rmitseprocesstools.model.Business;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.Employee;
 import rmitseprocesstools.model.Schedule;
+import rmitseprocesstools.model.WorkTime; 
 
 public class DbHandler
 {
@@ -382,4 +381,73 @@ private static void Init()
 		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
 	  } 
   }
+  
+  
+  //-----------------------WorkTime------------------------
+  
+  public static List<WorkTime> GetWorkTime()
+  {
+	  Init();
+	  List<WorkTime> returnList = new ArrayList<WorkTime>();
+	  
+	  try {
+		  s = c.createStatement();
+		  ResultSet rs = s.executeQuery( "SELECT * FROM WorkTime;" );
+		  while ( rs.next() ) {
+			  WorkTime temp = new WorkTime();
+    	 
+			  temp.WorkTimeId = rs.getInt("WorkTimeId");
+                          temp.EmployeeId = rs.getInt("EmployeeId");
+			  temp.BusinessId = rs.getInt("BusinessId");
+			  temp.StartDateTime = LocalDateTime.ofEpochSecond(rs.getInt("StartDateTime"), 0, ZoneOffset.ofHours(10));
+			  temp.EndDateTime = LocalDateTime.ofEpochSecond(rs.getInt("EndDateTime"), 0, ZoneOffset.ofHours(10));
+			  
+			  returnList.add(temp);
+		  }
+		  rs.close();
+		  s.close();
+	  } catch (Exception ex) {
+		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+	  }
+      
+      return returnList;
+  }
+  
+  public static void SaveWorkTime(WorkTime s)
+  {
+	  Init();
+	  String sql = "";
+	  
+	  try {
+		  if(s.WorkTimeId == 0)
+		  {
+			  sql = "INSERT INTO WorkTime ( EmployeeId, BusinessId, StartDateTime, EndDateTime) " +
+					"VALUES (?, ?, ?, ?)";
+		  }else{
+			  sql = "UPDATE WorkTime " +
+		            "SET EmployeeId = ?, BusinessId = ?, StartDateTime = ?, EndDateTime = ? " +
+				    "WHERE WorkTimeId = ?";
+		  }
+		  
+		  p = c.prepareStatement(sql);
+		  
+                  p.setInt(1, s.EmployeeId);
+		  p.setInt(2, s.BusinessId);
+		  p.setLong(3, s.StartDateTime.toEpochSecond(ZoneOffset.ofHours(10)));
+		  p.setLong(4, s.EndDateTime.toEpochSecond(ZoneOffset.ofHours(10)));
+		  
+		  if(s.WorkTimeId != 0)
+			  p.setInt(5, s.WorkTimeId);
+		  
+		  p.execute();
+		  
+		  if(s.WorkTimeId == 0)
+			  s.WorkTimeId = p.getGeneratedKeys().getInt(1);
+		  
+		  p.close();
+	  } catch (Exception ex) {
+		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+	  }
+  }
+
 }

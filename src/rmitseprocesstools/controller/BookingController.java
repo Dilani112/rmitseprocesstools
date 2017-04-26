@@ -19,15 +19,16 @@ import rmitseprocesstools.model.Booking;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.Schedule;
 import rmitseprocesstools.model.BookingStatus;
+import rmitseprocesstools.model.User;
 import rmitseprocesstools.view.BookingSummaryView;
 
 public class BookingController {
     
-    public String CurrentUser = "busines1";
-    
+    public User CurrentUser = null;
+        
     public void displayAddBookingView()
     {
-        AddBookingView view = new AddBookingView();        
+        AddBookingView view = new AddBookingView();
         view.setVisible(true);        
     }
     
@@ -44,9 +45,9 @@ public class BookingController {
         List<Customer> customerList = DbHandler.GetCustomers();
         BookingController controller = new BookingController();
         
-        if(controller.checkCurrentUserIsCustomer(controller.CurrentUser))
+        if(controller.checkCurrentUserIsCustomer(controller.CurrentUser.Username))
         {
-            String name = controller.getCustomerNameByUsername(controller.CurrentUser); 
+            String name = controller.getCustomerNameByUsername(controller.CurrentUser.Username); 
             nameList.add(name);
         
         }else {

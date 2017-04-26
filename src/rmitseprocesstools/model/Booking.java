@@ -1,7 +1,6 @@
 package rmitseprocesstools.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class Booking {
 	public int BookingId;

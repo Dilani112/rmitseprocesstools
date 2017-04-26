@@ -1,21 +1,15 @@
 package rmitseprocesstools;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
 import javax.swing.JOptionPane;
-import rmitseprocesstools.controller.BussinessOwnerController;
-
+import rmitseprocesstools.controller.AuthController;
 
 public class Rmitseprocesstools {
-
-
+    
     public static void main(String[] args) {
         try
         {
-            BussinessOwnerController controller = new BussinessOwnerController();
-            controller.displayBussinessOwnerOperationsView();
+            AuthController controller = new AuthController();
+            controller.displayLoginView();
            
         }
         catch(Exception e)
