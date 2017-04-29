@@ -4,26 +4,66 @@ import java.util.List;
 import rmitseprocesstools.controller.BussinessOwnerController;
 import rmitseprocesstools.controller.BookingController;
 import javax.swing.JOptionPane;
+import rmitseprocesstools.model.Business;
+import rmitseprocesstools.model.Customer;
+import rmitseprocesstools.model.Employee;
 
 
 public class AddBookingView extends javax.swing.JFrame {
 
     public AddBookingView() {
         initComponents();
-        //setCmbCustomerListValues();
-        //setCmbDateListValues(); 
+        setCmbCustomerListValues();
+        setCmbBusinessListValues();
+        JOptionPane.showMessageDialog(null,txtPhone.getText(),"",JOptionPane.ERROR_MESSAGE);
+        //setCmbEmployeeListValues();
         
     }
 
+   /* public void defaultBookingInfo(String name, String address,String phone,String q, String a)
+    {
+        txtName.setText(name);
+        txtAddress.setText(address);
+        txtPhone.setText(phone);
+        cmbQuestion.setSelectedItem(q);
+        txtAnswer.setText(a);
+        lblBusinessName.setVisible(false);
+        txtBusinessName.setVisible(false);
+      
+    }*/
+    
     public final void setCmbCustomerListValues()
     {
-       List<String> list = BookingController.setCustomerNameList();
-        
-       list.forEach((name) -> {
-           cmbCustomerList.addItem(name);
-        });     
+       List<Customer> list = BookingController.setBookingCustomerDetails(null);      
+       list.forEach((customer) -> {            
+           cmbCustomerList.addItem(customer.Name+" [CusID]-"+customer.CustomerId);
+           if(list.size()==1){
+                txtPhone.setText(customer.Phone);
+                txtAddress.setText(customer.Address);
+           }
+        });
     }
     
+    public final void setCmbBusinessListValues()
+    {
+       List<Business> list = BookingController.setBookingBusinessrDetails(null);      
+       list.forEach((business) -> {            
+           cmbBusinessList.addItem(business.Name+" [ID]-"+business.BusinessId);
+        });      
+    }
+    
+    public final void setCmbEmployeeListValues()
+    {
+       List<Employee> list = BookingController.setBookingEmployeesByBusiness(null);      
+       list.forEach((employee) -> {            
+           cmbAvailableEmployees.addItem(employee.Name+" [ID]-"+employee.EmployeeId);
+        });
+    }
+    
+    
+    
+    
+     /*
     public final void setCmbDateListValues()
     {
        List<String> list = BookingController.setScheDuleDateListValues();
@@ -33,7 +73,7 @@ public class AddBookingView extends javax.swing.JFrame {
         });     
     }
 
-    
+   
     public final void setCmbTimeListValues(String selectedDateListValue)
     {
        List<String> list = BookingController.setScheDuleTimeListValues(selectedDateListValue);
@@ -43,7 +83,7 @@ public class AddBookingView extends javax.swing.JFrame {
            String [] temp = item.split("\\s+");
            jstAvailableTimes.add(temp[0].trim()+" "+temp[1].trim()+" "+temp[2].trim()+" "+temp[3].trim()+" "+temp[4].trim(),this);
         });     
-    }
+    }*/
     
 
     @SuppressWarnings("unchecked")
@@ -61,16 +101,20 @@ public class AddBookingView extends javax.swing.JFrame {
         cmbCustomerList = new javax.swing.JComboBox();
         lblDates = new javax.swing.JLabel();
         cmbDateList = new javax.swing.JComboBox<>();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cmbBusinessList = new javax.swing.JComboBox<>();
         lblBusiness = new javax.swing.JLabel();
         cmbActivity = new javax.swing.JComboBox<>();
         lblActivity = new javax.swing.JLabel();
         cmbAvailableEmployees = new javax.swing.JComboBox<>();
         lblAvailableEmployees = new javax.swing.JLabel();
         lblAddress = new javax.swing.JLabel();
-        txtPhone1 = new javax.swing.JTextField();
+        txtAddress = new javax.swing.JTextField();
         jspAvailabletimes = new javax.swing.JScrollPane();
         jstAvailableTimes = new javax.swing.JList<>();
+        txtBusinessId = new javax.swing.JTextField();
+        txtCustomerId = new javax.swing.JTextField();
+        txtActivityId = new javax.swing.JTextField();
+        txtEmployeeId = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -93,6 +137,12 @@ public class AddBookingView extends javax.swing.JFrame {
 
         txtPhone.setEditable(false);
         txtPhone.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtPhone.setRequestFocusEnabled(false);
+        txtPhone.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPhoneActionPerformed(evt);
+            }
+        });
 
         lblPreferred.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblPreferred.setText("Available Times");
@@ -135,6 +185,12 @@ public class AddBookingView extends javax.swing.JFrame {
             }
         });
 
+        cmbBusinessList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbBusinessListActionPerformed(evt);
+            }
+        });
+
         lblBusiness.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblBusiness.setText("Business");
 
@@ -147,10 +203,28 @@ public class AddBookingView extends javax.swing.JFrame {
         lblAddress.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblAddress.setText("Address");
 
-        txtPhone1.setEditable(false);
-        txtPhone1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        txtAddress.setEditable(false);
+        txtAddress.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
         jspAvailabletimes.setViewportView(jstAvailableTimes);
+
+        txtBusinessId.setBackground(new java.awt.Color(204, 204, 204));
+        txtBusinessId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBusinessIdActionPerformed(evt);
+            }
+        });
+
+        txtCustomerId.setBackground(new java.awt.Color(204, 204, 204));
+        txtCustomerId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCustomerIdActionPerformed(evt);
+            }
+        });
+
+        txtActivityId.setBackground(new java.awt.Color(204, 204, 204));
+
+        txtEmployeeId.setBackground(new java.awt.Color(204, 204, 204));
 
         javax.swing.GroupLayout panelBookingLayout = new javax.swing.GroupLayout(panelBooking);
         panelBooking.setLayout(panelBookingLayout);
@@ -167,34 +241,47 @@ public class AddBookingView extends javax.swing.JFrame {
                             .addComponent(lblAvailableEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblActivity)
                             .addComponent(lblDates)
-                            .addComponent(lblBusiness)
                             .addComponent(lblAddress)
-                            .addComponent(lblName))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(lblName)
+                            .addComponent(lblBusiness)
+                            .addComponent(lblPhone))
+                        .addGap(13, 13, 13)
                         .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelBookingLayout.createSequentialGroup()
-                                .addComponent(cmbCustomerList, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(46, 46, 46)
-                                .addComponent(lblPhone)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(txtPhone1, javax.swing.GroupLayout.PREFERRED_SIZE, 507, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelBookingLayout.createSequentialGroup()
-                                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmbAvailableEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cmbActivity, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(cmbDateList, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBookingLayout.createSequentialGroup()
+                                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(cmbActivity, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbBusinessList, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbAvailableEmployees, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBookingLayout.createSequentialGroup()
+                                        .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(cmbDateList, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBookingLayout.createSequentialGroup()
+                                                .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(txtActivityId, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtEmployeeId, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
                                 .addGap(41, 41, 41)
                                 .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                                     .addComponent(lblPreferred)
-                                    .addComponent(jspAvailabletimes, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(jspAvailabletimes, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(panelBookingLayout.createSequentialGroup()
+                                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelBookingLayout.createSequentialGroup()
+                                        .addComponent(cmbCustomerList, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(27, 27, 27)
+                                        .addComponent(txtCustomerId, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtBusinessId, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBookingLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnConfirmBooking)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCancel)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelBookingLayout.setVerticalGroup(
             panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,41 +291,48 @@ public class AddBookingView extends javax.swing.JFrame {
                 .addGap(33, 33, 33)
                 .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(cmbCustomerList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPhone)
-                    .addComponent(lblName))
+                    .addComponent(lblName)
+                    .addComponent(txtCustomerId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBusinessId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(txtPhone1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAddress))
+                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblAddress)
+                    .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
+                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPhone)
+                    .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtActivityId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtEmployeeId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(6, 6, 6)
                 .addComponent(lblPreferred)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelBookingLayout.createSequentialGroup()
-                        .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelBookingLayout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblDates)
-                                    .addComponent(cmbDateList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jspAvailabletimes, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnCancel)
+                            .addComponent(btnConfirmBooking))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(panelBookingLayout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cmbBusinessList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblBusiness))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblDates)
+                            .addComponent(cmbDateList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(lblActivity)
                             .addComponent(cmbActivity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cmbAvailableEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblAvailableEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jspAvailabletimes, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelBookingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCancel)
-                    .addComponent(btnConfirmBooking))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(lblAvailableEmployees, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(78, 78, 78))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -254,7 +348,7 @@ public class AddBookingView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelBooking, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelBooking, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -268,16 +362,22 @@ public class AddBookingView extends javax.swing.JFrame {
 
     private void cmbDateListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDateListActionPerformed
 
-        jstAvailableTimes.removeAll();
-        setCmbTimeListValues(cmbDateList.getSelectedItem().toString());
+        /*jstAvailableTimes.removeAll();
+        setCmbTimeListValues(cmbDateList.getSelectedItem().toString());*/
     }//GEN-LAST:event_cmbDateListActionPerformed
 
     private void cmbCustomerListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCustomerListActionPerformed
 
         String text = this.cmbCustomerList.getSelectedItem().toString();
-        String [] temp = text.split("\\s+") ;
-        BookingController controller = new BookingController();
-        txtPhone.setText(controller.getCustomerPhoneById(temp[3].trim()));
+        String [] temp = text.split("\\-+") ;
+
+        List<Customer> list = BookingController.setBookingCustomerDetails(null);      
+        list.forEach((customer) -> {            
+            if( Integer.toString(customer.CustomerId).equals(temp[1].trim())){
+                txtPhone.setText(customer.Phone);
+                txtAddress.setText(customer.Address);
+            }                
+        });      
     }//GEN-LAST:event_cmbCustomerListActionPerformed
 
     private void cmbCustomerListItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCustomerListItemStateChanged
@@ -286,8 +386,8 @@ public class AddBookingView extends javax.swing.JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
-            BussinessOwnerController controller = new BussinessOwnerController();
-            controller.displayBussinessOwnerOperationsView();
+            BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();
+            view.setVisible(true);
             this.setVisible(false);
 
         } catch (Exception er) {
@@ -298,7 +398,7 @@ public class AddBookingView extends javax.swing.JFrame {
 
     private void btnConfirmBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmBookingActionPerformed
 
-        BookingController controller = new BookingController();
+        /*BookingController controller = new BookingController();
         List<String> list = BookingController.setScheDuleTimeListValues(cmbDateList.getSelectedItem().toString());
 
         String text = this.cmbCustomerList.getSelectedItem().toString();
@@ -314,8 +414,35 @@ public class AddBookingView extends javax.swing.JFrame {
             {
                 controller.saveBookingMade(Integer.parseInt(temp[3].trim()),Integer.parseInt(temp1[5].trim()),cmbDateList.getSelectedItem().toString());
             }
-        });
+        });*/
     }//GEN-LAST:event_btnConfirmBookingActionPerformed
+
+    private void txtPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPhoneActionPerformed
+
+    private void cmbBusinessListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBusinessListActionPerformed
+        
+      /*  String text = this.cmbBusinessList.getSelectedItem().toString();
+        String [] temp = text.split("\\-+") ;
+
+        List<Employee> list = BookingController.setBookingEmployeesByBusiness(null);      
+        list.forEach((employee) -> {            
+            if( Integer.toString(employee.BusinessId).equals(temp[1].trim())){
+               cmbAvailableEmployees.addItem(employee.Name+" [ID]-"+employee.EmployeeId);
+            }                
+        });   */
+        
+        
+    }//GEN-LAST:event_cmbBusinessListActionPerformed
+
+    private void txtBusinessIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusinessIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtBusinessIdActionPerformed
+
+    private void txtCustomerIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustomerIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCustomerIdActionPerformed
 
     public static void main(String args[]) {
 
@@ -351,9 +478,9 @@ public class AddBookingView extends javax.swing.JFrame {
     private javax.swing.JButton btnConfirmBooking;
     private javax.swing.JComboBox<String> cmbActivity;
     private javax.swing.JComboBox<String> cmbAvailableEmployees;
+    private javax.swing.JComboBox<String> cmbBusinessList;
     private javax.swing.JComboBox cmbCustomerList;
     private javax.swing.JComboBox<String> cmbDateList;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JScrollPane jspAvailabletimes;
     private javax.swing.JList<String> jstAvailableTimes;
     private javax.swing.JLabel lblActivity;
@@ -366,7 +493,11 @@ public class AddBookingView extends javax.swing.JFrame {
     private javax.swing.JLabel lblPreferred;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JPanel panelBooking;
+    private javax.swing.JTextField txtActivityId;
+    private javax.swing.JTextField txtAddress;
+    private javax.swing.JTextField txtBusinessId;
+    private javax.swing.JTextField txtCustomerId;
+    private javax.swing.JTextField txtEmployeeId;
     private javax.swing.JTextField txtPhone;
-    private javax.swing.JTextField txtPhone1;
     // End of variables declaration//GEN-END:variables
 }

@@ -85,17 +85,19 @@ public class AddEmployeeView extends javax.swing.JFrame {
                 .addGroup(panelAddEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtAddress)
                     .addComponent(txtName)
-                    .addComponent(txtPhone))
+                    .addGroup(panelAddEmployeeLayout.createSequentialGroup()
+                        .addComponent(txtPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 169, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddEmployeeLayout.createSequentialGroup()
-                .addContainerGap(129, Short.MAX_VALUE)
-                .addComponent(lblTitle)
-                .addGap(120, 120, 120))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddEmployeeLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(btnAddEmployee)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCancel))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAddEmployeeLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTitle)
+                .addGap(184, 184, 184))
         );
         panelAddEmployeeLayout.setVerticalGroup(
             panelAddEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,8 +146,8 @@ public class AddEmployeeView extends javax.swing.JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
-            BussinessOwnerController controller = new BussinessOwnerController();
-            controller.displayBussinessOwnerOperationsView();
+            BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();
+            view.setVisible(true);
             this.setVisible(false);
 
         } catch (Exception er) {
@@ -156,11 +158,13 @@ public class AddEmployeeView extends javax.swing.JFrame {
 
     private void btnAddEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddEmployeeActionPerformed
         EmployeeController controller = new EmployeeController();
-        if(controller.saveEmployeeMade(txtName.getText(),
+        BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();
+        if(controller.addEmployee(txtName.getText(),
                    txtAddress.getText(),
                    txtPhone.getText())){
+            view.setVisible(true);
             this.setVisible(false);
-        }       
+        }
     }//GEN-LAST:event_btnAddEmployeeActionPerformed
 
     private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed

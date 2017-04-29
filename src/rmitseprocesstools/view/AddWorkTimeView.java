@@ -20,7 +20,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
     public final void setCmbEmployeeListValues()
     {
        EmployeeController controller = new EmployeeController();
-       List<String> list = controller.getEmployeeList();
+       List<String> list = controller.constructCmbEmployeeList();
         
        list.forEach((name) -> {
            cmbEmployeeList.addItem(name);
@@ -30,7 +30,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
     public final void setCmbDateListValues()
     {
        EmployeeController controller = new EmployeeController();
-       List<String> list = controller.getWorkingDatesList();
+       List<String> list = controller.constructCmbWorkingDatesList();
        
        list.forEach((name) -> {
            cmbDateList.addItem(name);
@@ -41,7 +41,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
     public final void setCmbHrsListValues()
     {
        EmployeeController controller = new EmployeeController();
-       List<String> list = controller.getHoursList();
+       List<String> list = controller.constructCmbHoursList();
        
        list.forEach((name) -> {
            cmbStartHoursList.addItem(name);
@@ -52,7 +52,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
     public final void setCmbMinsListValues()
     {
        EmployeeController controller = new EmployeeController();
-       List<String> list = controller.getMinsList();
+       List<String> list = controller.constructCmbMinsList();
        
        list.forEach((name) -> {
            cmbStartMinsList.addItem(name);
@@ -256,8 +256,8 @@ public class AddWorkTimeView extends javax.swing.JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
        try {
-            BussinessOwnerController view = new BussinessOwnerController();
-            view.displayBussinessOwnerOperationsView();
+            BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();
+            view.setVisible(true);
             this.setVisible(false);
 
         } catch (Exception er) {
@@ -272,7 +272,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
         String text = this.cmbEmployeeList.getSelectedItem().toString();
         String [] temp = text.split("\\s+") ;
       
-        controller.saveEmployeeWorkTimeMade(Integer.parseInt(temp[4].trim()),
+        controller.addEmployeeWorkTime(Integer.parseInt(temp[4].trim()),
                                  this.cmbDateList.getSelectedItem().toString(),
                                  this.cmbStartHoursList.getSelectedItem().toString(),
                                  this.cmbFinishHoursList.getSelectedItem().toString(),

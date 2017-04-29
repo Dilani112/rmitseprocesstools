@@ -2,6 +2,7 @@ package rmitseprocesstools.view;
 
 import rmitseprocesstools.controller.*;
 import javax.swing.JOptionPane;
+import rmitseprocesstools.controller.BussinessOwnerController;
 
 
 public class BussinessOwnerOperationsView extends javax.swing.JFrame {
@@ -177,6 +178,11 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
 
         btnUpdateinfo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnUpdateinfo.setText("Update Info");
+        btnUpdateinfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateinfoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelPersonalLayout = new javax.swing.GroupLayout(panelPersonal);
         panelPersonal.setLayout(panelPersonalLayout);
@@ -268,10 +274,9 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
 
     private void btnAddEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddEmployeeActionPerformed
        try {
-           EmployeeController controller = new EmployeeController();     
-           controller.displayAddEmployeeView();
-           this.setVisible(false);
-                
+           AddEmployeeView view  = new AddEmployeeView();     
+           view.setVisible(true);
+           this.setVisible(false);                
             
         } catch (Exception er) {
             
@@ -282,8 +287,8 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
 
     private void btnAddWorkTimesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddWorkTimesActionPerformed
         try {
-           EmployeeController controller = new EmployeeController();     
-           controller.displayAddWorkTimeView();
+           AddWorkTimeView view = new AddWorkTimeView();     
+           view.setVisible(true);
            this.setVisible(false);                
             
         } catch (Exception er) {
@@ -294,8 +299,8 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
 
     private void btnAddNewBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNewBookingActionPerformed
         try {
-           BookingController controller = new BookingController();     
-           controller.displayAddBookingView();
+           AddBookingView view = new AddBookingView();     
+           view.setVisible(true);
            this.setVisible(false);                
             
         } catch (Exception er) {
@@ -307,9 +312,11 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         try {
            AuthController controller = new AuthController(); 
+           LoginView view = new LoginView();
+           
            if(controller.logout())
            {
-                controller.displayLoginView();
+                view.setVisible(true);
                 this.setVisible(false);
            }                          
             
@@ -321,8 +328,8 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
 
     private void btnViewBookingSummaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewBookingSummaryActionPerformed
         try {
-           BookingController controller = new BookingController();     
-           controller.displayBookingSummaryView();
+           BookingSummaryView view = new BookingSummaryView();     
+           view.setVisible(true);
            this.setVisible(false);                
             
         } catch (Exception er) {
@@ -333,8 +340,8 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
 
     private void btnViewEmployeeAvailabilityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewEmployeeAvailabilityActionPerformed
         try {
-           EmployeeController controller = new EmployeeController();     
-           controller.displayEmployeeAvailabilityView();
+           EmployeeAvailabilityView view = new EmployeeAvailabilityView();     
+           view.setVisible(true);
            this.setVisible(false);                
             
         } catch (Exception er) {
@@ -342,6 +349,15 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnViewEmployeeAvailabilityActionPerformed
+
+    private void btnUpdateinfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateinfoActionPerformed
+        
+        BussinessOwnerController controller = new BussinessOwnerController();
+        controller.populateBusinessInfo();
+        this.setVisible(false);
+        
+        
+    }//GEN-LAST:event_btnUpdateinfoActionPerformed
 
 
     public static void main(String args[]) {

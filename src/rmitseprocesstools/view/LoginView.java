@@ -4,7 +4,6 @@ import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import javax.swing.JOptionPane;
 import rmitseprocesstools.controller.AuthController;
-import rmitseprocesstools.controller.BookingController;
 import rmitseprocesstools.controller.BussinessOwnerController;
 import rmitseprocesstools.controller.CustomerController;
 
@@ -182,15 +181,17 @@ public class LoginView extends javax.swing.JFrame {
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         
         AuthController controller = new AuthController();
-        BussinessOwnerController controllerb = new BussinessOwnerController();
-        CustomerController controllerc = new CustomerController();
+        
+        
+        BussinessOwnerOperationsView viewb = new BussinessOwnerOperationsView();
+        CustomerOperationsView viewc = new CustomerOperationsView();
  
         if (controller.login(txtUserName.getText(), jpfPassword.getText()))
         {
             if(controller.queryBusiness(txtUserName.getText()) !=null)
             {
-               try {                             
-                        controllerb.displayBussinessOwnerOperationsView();
+               try {                                               
+                        viewb.setVisible(true);
                         this.setVisible(false);                
             
                     } catch (Exception er) {
@@ -202,8 +203,8 @@ public class LoginView extends javax.swing.JFrame {
             
             if(controller.queryCustomer(txtUserName.getText()) !=null)
             {
-                try {                             
-                        controllerc.displayCustomerOperationsView();
+                try {                            
+                        viewc.setVisible(true);
                         this.setVisible(false);                
             
                     } catch (Exception er) {
@@ -219,10 +220,9 @@ public class LoginView extends javax.swing.JFrame {
     private void btnRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegisterActionPerformed
         
         try {
-           AuthController controller = new AuthController();     
-           controller.displayRegistrationView();
-           this.setVisible(false);                
-            
+           RegistrationView view = new RegistrationView();   
+           view.setVisible(true);
+           this.setVisible(false);            
         } catch (Exception er) {
             
             JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
@@ -236,8 +236,8 @@ public class LoginView extends javax.swing.JFrame {
 
     private void btnForgotPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForgotPasswordActionPerformed
        try {
-           AuthController controller = new AuthController();     
-           controller.displayResetPasswordView();
+           ResetPasswordView view = new ResetPasswordView();
+           view.setVisible(true);
            this.setVisible(false);                
             
         } catch (Exception er) {

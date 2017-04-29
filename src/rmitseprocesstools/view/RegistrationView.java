@@ -231,8 +231,8 @@ public class RegistrationView extends javax.swing.JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
-            AuthController controller = new AuthController(); 
-            controller.displayLoginView();
+            LoginView view = new LoginView(); 
+            view.setVisible(true);
             this.setVisible(false);                
             
         } catch (Exception er) {
@@ -248,7 +248,7 @@ public class RegistrationView extends javax.swing.JFrame {
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         
         AuthController controller = new AuthController();
-        CustomerController controllerb = new CustomerController();
+        CustomerOperationsView view = new CustomerOperationsView();
         
         if (controller.register(txtUserName.getText(), jpfPassword.getText(),
                 jpfConfirmPassword.getText(), txtName.getText(), 
@@ -260,7 +260,7 @@ public class RegistrationView extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null,
                 "Registration successfull.",
                 "",JOptionPane.INFORMATION_MESSAGE);
-                controllerb.displayCustomerOperationsView();
+                view.setVisible(true);
                 this.setVisible(false);
                 
             }else{

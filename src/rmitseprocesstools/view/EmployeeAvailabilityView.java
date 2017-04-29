@@ -14,27 +14,27 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
     public EmployeeAvailabilityView() {
         initComponents();
         setCmbEmployeeListValues();
-        getEmployeeAvailabilityList();
+        setCmbEmployeeAvailabilityList();
     }
 
     public final void setCmbEmployeeListValues()
     {
        EmployeeController controller = new EmployeeController();
-        List<String> list = controller.getEmployeeListbyBusinessId();
+        List<String> list = controller.constructCmbEmployeeListbyBusinessId();
         
        list.forEach((name) -> {
            cmbEmployeeList.addItem(name);
         });     
     }
     
-    public final void getEmployeeAvailabilityList()
+    public final void setCmbEmployeeAvailabilityList()
     {
        List <WorkTime> list = new ArrayList();
        
        String text = this.cmbEmployeeList.getSelectedItem().toString();
        String [] temp = text.split("\\s+") ;
        
-       list = EmployeeController.getEmployeeAvailabilityListbyEmployeeId(Integer.parseInt(temp[4].trim()));        
+       list = EmployeeController.viewEmployeeAvailability(Integer.parseInt(temp[4].trim()));        
        
        
         DefaultTableModel model = new DefaultTableModel(new Object[]{"WorkTime ID","Date","Start","Finish"}, 0);
@@ -168,8 +168,8 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
-           BussinessOwnerController controller = new BussinessOwnerController();     
-           controller.displayBussinessOwnerOperationsView();
+           BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();     
+           view.setVisible(true);
            this.setVisible(false);                
             
         } catch (Exception er) {
@@ -179,7 +179,7 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void cmbEmployeeListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEmployeeListActionPerformed
-        getEmployeeAvailabilityList();
+        setCmbEmployeeAvailabilityList();
     }//GEN-LAST:event_cmbEmployeeListActionPerformed
 
 

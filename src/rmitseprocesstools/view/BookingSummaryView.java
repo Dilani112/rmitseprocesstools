@@ -15,12 +15,12 @@ public class BookingSummaryView extends javax.swing.JFrame {
 
     public BookingSummaryView() {
         initComponents();
-        setBookingSummaryTable();
+        setTableBookingSummary();
         
     }
 
 
-    public final void setBookingSummaryTable()
+    public final void setTableBookingSummary()
     {
        List <Booking> list = new ArrayList();
        list = BookingController.getBookingSummaryList();        
@@ -49,6 +49,9 @@ public class BookingSummaryView extends javax.swing.JFrame {
         btnCancel = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel1.setText("Booking Summary");
@@ -82,7 +85,7 @@ public class BookingSummaryView extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(spanelSummary, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
+                    .addComponent(spanelSummary, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnCancel)))
@@ -127,8 +130,8 @@ public class BookingSummaryView extends javax.swing.JFrame {
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         try {
-           BussinessOwnerController controller = new BussinessOwnerController();     
-           controller.displayBussinessOwnerOperationsView();
+           BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();     
+           view.setVisible(true);
            this.setVisible(false);                
             
         } catch (Exception er) {
