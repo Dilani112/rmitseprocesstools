@@ -15,15 +15,14 @@ public class BookingSummaryView extends javax.swing.JFrame {
 
     public BookingSummaryView() {
         initComponents();
-        setTableBookingSummary();
-        
+        setTableBookingSummary();     
     }
 
 
     public final void setTableBookingSummary()
     {
        List <Booking> list = new ArrayList();
-       list = BookingController.getBookingSummaryList();        
+       list = BookingController.getBookingSummaryList(txtTitle);        
         
         DefaultTableModel model = new DefaultTableModel(new Object[]{"Booking ID", "Schedule ID","Person ID","Status","Date"}, 0);
         for(Booking booking:list){
@@ -42,8 +41,8 @@ public class BookingSummaryView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        panelSummary = new javax.swing.JPanel();
+        txtTitle = new javax.swing.JLabel();
         spanelSummary = new javax.swing.JScrollPane();
         tblSummary = new javax.swing.JTable();
         btnCancel = new javax.swing.JButton();
@@ -51,10 +50,10 @@ public class BookingSummaryView extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelSummary.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel1.setText("Booking Summary");
+        txtTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        txtTitle.setText("Booking Summary");
 
         tblSummary.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         tblSummary.setModel(new javax.swing.table.DefaultTableModel(
@@ -68,6 +67,7 @@ public class BookingSummaryView extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tblSummary.setEnabled(false);
         spanelSummary.setViewportView(tblSummary);
 
         btnCancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -78,28 +78,28 @@ public class BookingSummaryView extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelSummaryLayout = new javax.swing.GroupLayout(panelSummary);
+        panelSummary.setLayout(panelSummaryLayout);
+        panelSummaryLayout.setHorizontalGroup(
+            panelSummaryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSummaryLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelSummaryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(spanelSummary, javax.swing.GroupLayout.DEFAULT_SIZE, 570, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelSummaryLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnCancel)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(213, 213, 213))
+            .addGroup(panelSummaryLayout.createSequentialGroup()
+                .addGap(196, 196, 196)
+                .addComponent(txtTitle)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelSummaryLayout.setVerticalGroup(
+            panelSummaryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelSummaryLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
-                .addComponent(jLabel1)
+                .addComponent(txtTitle)
                 .addGap(18, 18, 18)
                 .addComponent(spanelSummary, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -113,14 +113,14 @@ public class BookingSummaryView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(panelSummary, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -129,14 +129,30 @@ public class BookingSummaryView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        try {
-           BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();     
-           view.setVisible(true);
-           this.setVisible(false);                
-            
-        } catch (Exception er) {
-            
-            JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
+        
+        BookingController controller = new BookingController();
+        
+        if(controller.btnCancel())
+        {
+            try {
+                CustomerOperationsView view = new CustomerOperationsView();
+                view.setVisible(true);
+                this.setVisible(false);
+
+            } catch (Exception er) {
+
+                JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
+            }
+        }else{
+            try {
+                BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();
+                view.setVisible(true);
+                this.setVisible(false);
+
+            } catch (Exception er) {
+
+                JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
+            }
         }
     }//GEN-LAST:event_btnCancelActionPerformed
 
@@ -151,9 +167,9 @@ public class BookingSummaryView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel panelSummary;
     private javax.swing.JScrollPane spanelSummary;
     private javax.swing.JTable tblSummary;
+    private javax.swing.JLabel txtTitle;
     // End of variables declaration//GEN-END:variables
 }

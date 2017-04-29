@@ -91,6 +91,11 @@ public class CustomerOperationsView extends javax.swing.JFrame {
 
         btnTracking.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnTracking.setText("Track Booking");
+        btnTracking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTrackingActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelBookingManagementLayout = new javax.swing.GroupLayout(panelBookingManagement);
         panelBookingManagement.setLayout(panelBookingManagementLayout);
@@ -266,7 +271,15 @@ public class CustomerOperationsView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnViewBookingSummaryActionPerformed
 
     private void btnCancelBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelBookingActionPerformed
-        // TODO add your handling code here:
+        try {
+           CancelBookingView view = new CancelBookingView();     
+           view.setVisible(true);
+           this.setVisible(false);                
+            
+        } catch (Exception er) {
+            
+            JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnCancelBookingActionPerformed
 
     private void btnUpdateinfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateinfoActionPerformed
@@ -276,6 +289,18 @@ public class CustomerOperationsView extends javax.swing.JFrame {
         this.setVisible(false);
 
     }//GEN-LAST:event_btnUpdateinfoActionPerformed
+
+    private void btnTrackingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTrackingActionPerformed
+       try {
+           TrackBookingView view = new TrackBookingView();     
+           view.setVisible(true);
+           this.setVisible(false);                
+            
+        } catch (Exception er) {
+            
+            JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnTrackingActionPerformed
 
 
     public static void main(String args[]) {

@@ -20,7 +20,7 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
     public final void setCmbEmployeeListValues()
     {
        EmployeeController controller = new EmployeeController();
-        List<String> list = controller.constructCmbEmployeeListbyBusinessId();
+       List<String> list = controller.constructCmbEmployeeListbyBusinessId();
         
        list.forEach((name) -> {
            cmbEmployeeList.addItem(name);
@@ -34,7 +34,7 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
        String text = this.cmbEmployeeList.getSelectedItem().toString();
        String [] temp = text.split("\\s+") ;
        
-       list = EmployeeController.viewEmployeeAvailability(Integer.parseInt(temp[4].trim()));        
+       list = EmployeeController.viewEmployeeAvailability(Integer.parseInt(temp[3].trim()));        
        
        
         DefaultTableModel model = new DefaultTableModel(new Object[]{"WorkTime ID","Date","Start","Finish"}, 0);
