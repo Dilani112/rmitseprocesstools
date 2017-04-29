@@ -12,7 +12,8 @@ import rmitseprocesstools.model.Business;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.Employee;
 import rmitseprocesstools.model.Schedule;
-import rmitseprocesstools.model.WorkTime; 
+import rmitseprocesstools.model.WorkTime;
+import rmitseprocesstools.model.Activity;
 
 public class DbHandler
 {
@@ -68,6 +69,41 @@ private static void Init()
       
       return returnList;
   }
+  
+  public static List<Employee> GetEmployeesByBusinessId(int id)
+  {
+	  Init();
+	  List<Employee> returnList = new ArrayList<Employee>();
+          String sql = ""; 
+                  
+	  try {
+		  s = c.createStatement();
+                  sql = "SELECT * FROM Employee WHERE BusinessId = ?";
+          
+                  p = c.prepareStatement(sql);
+                  p.setInt(1,id);
+                  
+		  ResultSet rs = s.executeQuery(sql);
+		  while ( rs.next() ) {
+			  Employee temp = new Employee();
+    	 
+			  temp.EmployeeId = rs.getInt("EmployeeId");
+			  temp.BusinessId = rs.getInt("BusinessId");
+			  temp.Name = rs.getString("Name");
+			  temp.Address = rs.getString("Address");
+			  temp.Phone = rs.getString("Phone");
+    	 
+			  returnList.add(temp);
+		  }
+		  rs.close();
+		  s.close();
+	  } catch (Exception ex) {
+		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+	  }
+      
+      return returnList;
+  }
+
   
   public static void SaveEmployee(Employee e)
   {
@@ -450,4 +486,71 @@ private static void Init()
 	  }
   }
 
+    //-----------------------Activity------------------------
+  
+  public static List<Activity> GetActivities()
+  {
+	  Init();
+	  List<Activity> returnList = new ArrayList<Activity>();
+	  
+	  try {
+		  s = c.createStatement();
+		  ResultSet rs = s.executeQuery( "SELECT * FROM Activity;" );
+		  while ( rs.next() ) {
+			  Activity temp = new Activity();
+    	 
+			  temp.ActivityId = rs.getInt("ActivityId");                          
+			  temp.BusinessId = rs.getInt("BusinessId");
+			  temp.Name = rs.getString("Name");
+			  temp.Duration = rs.getInt("Duration");
+			  
+			  returnList.add(temp);
+		  }
+		  rs.close();
+		  s.close();
+	  } catch (Exception ex) {
+		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+	  }
+      
+      return returnList;
+  }
+  
+  public static void SaveActivity(Activity s)
+  {
+	  Init();
+	  String sql = "";
+	  
+	  try {
+		  if(s.ActivityId == 0)
+		  {
+			  sql = "INSERT INTO Activity ( ActivityId, BusinessId, Name, Duration) " +
+					"VALUES (?, ?, ?, ?)";
+		  }else{
+			  sql = "UPDATE Activity " +
+		            "SET ActivityId = ?, BusinessId = ?, Name = ?, Duration = ? " +
+				    "WHERE ActivityId = ?";
+		  }
+		  
+		  p = c.prepareStatement(sql);
+		  
+                  p.setInt(1, s.ActivityId);
+		  p.setInt(2, s.BusinessId);
+		  p.setString(3, s.Name);
+		  p.setInt(4, s.Duration);
+		  
+		  if(s.ActivityId != 0)
+			  p.setInt(5, s.ActivityId);
+		  
+		  p.execute();
+		  
+		  if(s.ActivityId == 0)
+			  s.ActivityId = p.getGeneratedKeys().getInt(1);
+		  
+		  p.close();
+	  } catch (Exception ex) {
+		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+	  }
+  }
+
+  
 }
