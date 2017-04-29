@@ -7,57 +7,78 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import rmitseprocesstools.view.AddEmployeeView;
-import rmitseprocesstools.view.AddWorkTimeView;
-import rmitseprocesstools.view.EmployeeAvailabilityView;
 import java.util.List;
 import javax.swing.JOptionPane;
 import rmitseprocesstools.model.*;
 import rmitseprocesstools.DbHandler;
 import rmitseprocesstools.Utility;
+import static rmitseprocesstools.controller.AuthController.currentUser;
 
 public class EmployeeController {
-
-    public User CurrentUser = null;
-        
-    public void displayAddEmployeeView()
-    {
-        AddEmployeeView view = new AddEmployeeView();               
-        view.setVisible(true);        
-    }
     
-    public void displayAddWorkTimeView()
-    {
-        AddWorkTimeView view = new AddWorkTimeView();               
-        view.setVisible(true);        
-    }
-     
-    public void displayEmployeeAvailabilityView()
-    {
-        EmployeeAvailabilityView view = new EmployeeAvailabilityView();               
-        view.setVisible(true);        
-    }
-    
-    public boolean saveEmployeeMade(String name, String address,String phone) 
+    public boolean addEmployee(String name, String address,String phone) 
     {
         Employee newEmployee = new Employee();
-        BussinessOwnerController view = new BussinessOwnerController();
                
         Utility utility = new Utility();
                
-        if(utility.validateName(name) && utility.validatePhone(phone)){            
+        if(utility.validateName(name) && utility.validatePhone(phone) && utility.validateAddress(address)){            
             newEmployee.Phone = phone;
             newEmployee.Name = name;
             newEmployee.Address = address;         
             DbHandler.SaveEmployee(newEmployee);
             JOptionPane.showMessageDialog(null,"Employee data successfuly saved.","",JOptionPane.INFORMATION_MESSAGE); 
-            view.displayBussinessOwnerOperationsView();
             return true;
+        }else{
+            JOptionPane.showMessageDialog(null,"Saving employee data failed.","",JOptionPane.ERROR_MESSAGE);
         }
         return false;
    }
 
-    public List<String> getEmployeeList(){
+   public boolean addEmployeeWorkTime(int nemployeeID,String nDate,String nShrs, String nFhrs,
+            String nSmins, String nFmins){
+
+        AuthController controller = new  AuthController();
+        Business business =new Business(); 
+        WorkTime newWorkTime = new WorkTime();
+        
+        business = controller.queryBusiness(currentUser.Username);
+       
+        String startDate = nDate+" "+nShrs+":"+nSmins ;
+        String finishDate = nDate+" "+nFhrs+":"+nFmins ;      
+        
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+
+        newWorkTime.EmployeeId = nemployeeID;
+        newWorkTime.BusinessId = business.BusinessId;
+        newWorkTime.StartDateTime = LocalDateTime.parse(startDate, format);
+        newWorkTime.EndDateTime =  LocalDateTime.parse(finishDate, format);   
+        DbHandler.SaveWorkTime(newWorkTime);        
+        JOptionPane.showMessageDialog(null,"Employee time has been saved.","",JOptionPane.ERROR_MESSAGE);
+        
+        return true;
+   } 
+  
+   public static List<WorkTime> viewEmployeeAvailability(int id){
+       
+        List <WorkTime> allEmployeeWorkTimeList = new ArrayList();
+        List <WorkTime> employeeAvailabilityList = new ArrayList();
+        allEmployeeWorkTimeList =  DbHandler.GetWorkTime();
+        
+        for(WorkTime workTime:allEmployeeWorkTimeList){
+            
+            if(id == workTime.EmployeeId)
+            {
+                employeeAvailabilityList.add(workTime) ;
+            }            
+        }   
+                
+        return employeeAvailabilityList;
+    }
+    
+
+    
+   public List<String> constructCmbEmployeeList(){
    
         List<String> employeeNameList = new ArrayList();
         List<Employee> employeeList = DbHandler.GetEmployees();
@@ -70,7 +91,7 @@ public class EmployeeController {
    }
     
     
-    public List<String> getHoursList(){
+    public List<String> constructCmbHoursList(){
    
         List<String> hrsList = new ArrayList();
         int numHrs = 24;
@@ -88,7 +109,7 @@ public class EmployeeController {
    }
     
     
-    public List<String> getMinsList(){
+    public List<String> constructCmbMinsList(){
    
         List<String> minsList = new ArrayList();
         int numMins = 60;
@@ -105,7 +126,7 @@ public class EmployeeController {
    }
     
     
-    public List<String> getWorkingDatesList(){
+    public List<String> constructCmbWorkingDatesList(){
    
         List<String> daysList = new ArrayList<String>();
         
@@ -130,91 +151,23 @@ public class EmployeeController {
         }
         return daysList;
    }
-    
-    
-    public void saveEmployeeWorkTimeMade(int nemployeeID,String nDate,String nShrs, String nFhrs,
-            String nSmins, String nFmins){
-
-        WorkTime newWorkTime = new WorkTime();
-               
-        String startDate = nDate+" "+nShrs+":"+nSmins ;
-        String finishDate = nDate+" "+nFhrs+":"+nFmins ;      
-        
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
-        newWorkTime.EmployeeId = nemployeeID;
-        newWorkTime.BusinessId = getBusinessIdByUserName(CurrentUser.Username);
-        newWorkTime.StartDateTime = LocalDateTime.parse(startDate, format);
-        newWorkTime.EndDateTime =  LocalDateTime.parse(finishDate, format);   
-        DbHandler.SaveWorkTime(newWorkTime);        
-        JOptionPane.showMessageDialog(null,"Employee time has been saved.","",JOptionPane.ERROR_MESSAGE);
-             
-   }
-    
-    public int getBusinessIdByUserName(String currentUser)
+           
+    public  List<String> constructCmbEmployeeListbyBusinessId()
     {
-        int businessId = 0;
+        AuthController controller = new  AuthController();
+        Business business = new Business();
+        business = controller.queryBusiness(currentUser.Username); 
+        List <String> employeeNameList = new ArrayList();  
         
-        List<Business> businessList = DbHandler.GetBusinesses();
-        
-       for(Business business:businessList){
-            
-            if(currentUser.equals(business.Username))
-            {
-                businessId =  business.BusinessId;  
-            }            
-        }  
-        return businessId;
-    }
-    
-    
-    public static List<WorkTime> getEmployeeAvailabilityListbyEmployeeId(int id)
-    {
-        List <WorkTime> allEmployeeWorkTimeList = new ArrayList();
-        List <WorkTime> employeeAvailabilityList = new ArrayList();
-        allEmployeeWorkTimeList =  DbHandler.GetWorkTime();
-        
-        for(WorkTime workTime:allEmployeeWorkTimeList){
-            
-            if(id == workTime.EmployeeId)
-            {
-                employeeAvailabilityList.add(workTime) ;
-            }            
-        }   
-                
-        return employeeAvailabilityList;
-    }
-    
-    public  List<String> getEmployeeListbyBusinessId()
-    {
-        List <Employee> allEmployeeList = new ArrayList();
-        List <String> employeeList = new ArrayList();
-        allEmployeeList =  DbHandler.GetEmployees();
-        
-        for(Employee employee:allEmployeeList){
-            
-            if(getBusinessIdByUserName(CurrentUser.Username) == employee.BusinessId)
-            {
-                employeeList.add(employee.Name+" [ID - "+employee.EmployeeId+" ]") ;
-            }            
-        }   
-                
-        return employeeList;
-    }
-    
-    public static String getEmployeeNameById(int id)
-    {
-        String name="";
-        List<Employee> employeeList = DbHandler.GetEmployees();
+        List <Employee> employeeList = DbHandler.GetEmployeesByBusinessId(Integer.toString(business.BusinessId));
         
         for(Employee employee:employeeList){
-            
-            if(id == employee.EmployeeId)
-            {
-                name = employee.Name ;
-            }            
-        }            
-        return name;
+
+                employeeNameList.add(employee.Name+" [ID - "+employee.EmployeeId+" ]"); 
+                
+        }   
+                
+        return employeeNameList;
     }
     
 }

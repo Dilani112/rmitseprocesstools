@@ -3,23 +3,15 @@ package rmitseprocesstools.controller;
 import rmitseprocesstools.model.Business;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.User;
-
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.JOptionPane;
 import rmitseprocesstools.DbHandler;
-import rmitseprocesstools.view.LoginView;
-import rmitseprocesstools.view.RegistrationView;
-import rmitseprocesstools.view.ResetPasswordView;
 
 public class AuthController {
     
     public static User currentUser;
     
-    public User getActiveUser() {
-        return currentUser;
-    }
-        
     public boolean register(String email, String password,String confirmpwd, String name, String address, String phone, String q, String a){
         Customer n = new Customer();
         
@@ -60,40 +52,7 @@ public class AuthController {
         JOptionPane.showMessageDialog(null,"Invalid Username or password. Please try again.","",JOptionPane.ERROR_MESSAGE);
         return false;
     }
-
-    public Customer queryCustomer(String input) {
-        List<Customer> customers = DbHandler.GetCustomers();
-
-        Iterator<Customer> itr = customers.iterator();
-
-        Customer temp;
-
-        while(itr.hasNext()){
-            temp = itr.next();
-            if(temp.getUsername().equals(input)) {
-                return temp;
-            }
-        }
-        return null;
-    }
-
-    
-    public Business queryBusiness(String input) {
-        List<Business> businesses = DbHandler.GetBusinesses();
-
-        Iterator<Business> itr = businesses.iterator();
-
-        Business temp;
-
-        while(itr.hasNext()){
-            temp = itr.next();
-            if(temp.getUsername().equals(input)) {
-                return temp;
-            }
-        }
-        return null;
-    }
-    
+   
     public boolean resetPassword(String email, String password, String confirmpwd, String ques, String ans) {
         
         Customer customer = queryCustomer(email);
@@ -127,25 +86,41 @@ public class AuthController {
             return true;
         }
         return false;
-    }
- 
+    }     
     
-    public void displayLoginView()
-    {
-        LoginView view = new LoginView();
-        view.setVisible(true);        
-    }
-    
-    public void displayRegistrationView()
-    {
-        RegistrationView view = new RegistrationView();
-        view.setVisible(true);        
-    }
-    
-    public void displayResetPasswordView()
-    {
-        ResetPasswordView view = new ResetPasswordView();
-        view.setVisible(true);        
+    public Customer queryCustomer(String input) {
+        List<Customer> customers = DbHandler.GetCustomers();
+
+        Iterator<Customer> itr = customers.iterator();
+
+        Customer temp;
+
+        while(itr.hasNext()){
+            temp = itr.next();
+            if(temp.getUsername().equals(input)) {
+                return temp;
+            }
+        }
+        return null;
     }
     
+    public Business queryBusiness(String input) {
+        List<Business> businesses = DbHandler.GetBusinesses();
+
+        Iterator<Business> itr = businesses.iterator();
+
+        Business temp;
+
+        while(itr.hasNext()){
+            temp = itr.next();
+            if(temp.getUsername().equals(input)) {
+                return temp;
+            }
+        }
+        return null;
+    }
+    
+    public User getActiveUser() {
+        return currentUser;
+    }
 }
