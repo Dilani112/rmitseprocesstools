@@ -159,11 +159,12 @@ public class EmployeeController {
         business = controller.queryBusiness(currentUser.Username); 
         List <String> employeeNameList = new ArrayList();  
         
-        List <Employee> employeeList = DbHandler.GetEmployeesByBusinessId(business.BusinessId);
+        List <Employee> employeeList = DbHandler.GetEmployeesByBusinessId(Integer.toString(business.BusinessId));
         
         for(Employee employee:employeeList){
 
-                employeeNameList.add(employee.Name+" [ID - "+employee.EmployeeId+" ]") ;          
+                employeeNameList.add(employee.Name+" [ID - "+employee.EmployeeId+" ]"); 
+                
         }   
                 
         return employeeNameList;
