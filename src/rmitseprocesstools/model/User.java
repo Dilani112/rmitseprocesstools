@@ -3,10 +3,11 @@ import rmitseprocesstools.Utility;
 
 
 public abstract class User {
-	public String Username;
-	public String Password;
-        
-        Utility utility = new Utility();
+    
+    public String Username;
+    public String Password;
+
+    Utility utility = new Utility();
         
     public boolean setUsername(String input) {
         if(utility.validateEmail(input)){

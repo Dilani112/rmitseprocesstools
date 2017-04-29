@@ -15,7 +15,7 @@ public class Customer extends User {
 		CustomerId = input;
 		return true;
 	}
-
+        
 	public boolean setName(String input) {
 		if(utility.validateName(input)){
 			Name = input;
@@ -74,8 +74,10 @@ public class Customer extends User {
 
     public String getName() {
         return Name;
-    }
-
-        
+    }  
+    
+    public int getId() {
+        return CustomerId;
+    }  
         
 }
