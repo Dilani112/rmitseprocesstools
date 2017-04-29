@@ -1,55 +1,39 @@
-package controller;
+package rmitseprocesstools.controller;
 
-import model.Business;
-import model.Customer;
-import model.User;
-
+import rmitseprocesstools.model.Business;
+import rmitseprocesstools.model.Customer;
+import rmitseprocesstools.model.User;
 import java.util.Iterator;
 import java.util.List;
+import javax.swing.JOptionPane;
+import rmitseprocesstools.DbHandler;
 
 public class AuthController {
-    private static Customer currentUser;
-
-//    public AuthController() {
-//        Customer n = new Customer();
-//        n.setCustomerId(0);
-//        n.setUsername("thejana@outlook.com");
-//        n.setPassword("password");
-//        n.setName("Thejana");
-//        n.setAddress("295 State Road");
-//        n.setPhone("0942342311");
-//        n.setQuestion("What's your pet's name?");
-//        n.setAnswer("Fuss");
-//
-//        DbHandler.SaveCustomer(n);
-//    }
-
-    public static boolean register(String email, String password, String name, String address, String phone, String q, String a){
+    
+    public static User currentUser;
+    
+    public boolean register(String email, String password,String confirmpwd, String name, String address, String phone, String q, String a){
         Customer n = new Customer();
-
-        boolean status = false;
-
-        n.setCustomerId(0);
-        status = n.setUsername(email);
-        status = n.setPassword(password);
-        status = n.setName(name);
-        status = n.setAddress(address);
-        status = n.setPhone(address);
-        status = n.setQuestion(q);
-        status = n.setAnswer(a);
-
-        DbHandler.SaveCustomer(n);
-        currentUser = n;
-
-        return status;
+        
+        if(n.setUsername(email) && n.setPassword(password) && n.setName(name) &&
+           n.setAddress(address)&& n.setPhone(phone) && n.setQuestion(q) && 
+               n.setAnswer(a) )
+        {
+            DbHandler.SaveCustomer(n);
+            currentUser = n;
+            return true;
+        }
+        
+        return false;
     }
 
-    public static boolean login(String email, String password) {
+    public boolean login(String email, String password) {
         List<Customer> customers = DbHandler.GetCustomers();
         List<Business> businesses = DbHandler.GetBusinesses();
 
         Iterator<Customer> itr = customers.iterator();
-
+        Iterator<Business> itrb = businesses.iterator();
+     
         while(itr.hasNext()){
             Customer cur = itr.next();
             if(cur.getUsername().equals(email) && cur.getPassword().equals(password)) {
@@ -57,10 +41,54 @@ public class AuthController {
                 return true;
             }
         }
+        
+        while(itrb.hasNext()){
+            Business curb = itrb.next();
+            if(curb.getUsername().equals(email) && curb.getPassword().equals(password)) {
+                currentUser = curb;
+                return true;
+            }
+        }
+        JOptionPane.showMessageDialog(null,"Invalid Username or password. Please try again.","",JOptionPane.ERROR_MESSAGE);
+        return false;
+    }
+   
+    public boolean resetPassword(String email, String password, String confirmpwd, String ques, String ans) {
+        
+        Customer customer = queryCustomer(email);
+
+        if (customer == null) {
+            JOptionPane.showMessageDialog(null,"Username doesnot exist in the system. Please try again with a different username.","",JOptionPane.ERROR_MESSAGE);
+            return false;
+        }else{
+            
+            if(customer.Question.equals(ques)){
+                
+                if(customer.Answer.equals(ans)){                   
+                    customer.setPassword(password);
+                    DbHandler.SaveCustomer(customer);
+                    return true;
+                }else{
+                       JOptionPane.showMessageDialog(null,"Invalid answer. Please try again.","",JOptionPane.ERROR_MESSAGE);
+                }                     
+            }else{
+                JOptionPane.showMessageDialog(null,"Invalid question selected. Please select the valid question.","",JOptionPane.ERROR_MESSAGE);
+                
+            }          
+        }
+        
         return false;
     }
 
-    private static Customer queryCustomer(String input) {
+    public boolean logout() {
+        if(currentUser != null){
+            currentUser = null;
+            return true;
+        }
+        return false;
+    }     
+    
+    public Customer queryCustomer(String input) {
         List<Customer> customers = DbHandler.GetCustomers();
 
         Iterator<Customer> itr = customers.iterator();
@@ -69,39 +97,30 @@ public class AuthController {
 
         while(itr.hasNext()){
             temp = itr.next();
-            if(temp.getUsername() == input) {
+            if(temp.getUsername().equals(input)) {
                 return temp;
             }
         }
         return null;
     }
+    
+    public Business queryBusiness(String input) {
+        List<Business> businesses = DbHandler.GetBusinesses();
 
-//    public boolean resetPassword(String email, String password, String ques, String ans) {
-//        Customer customer = queryCustomer(email);
-//
-//        if (customer == null) {
-//            return false;
-//        }
-//
-//        if (customer.getQuestion() == ques && customer.getAnswer() == ans) {
-//            customer.setPassword(password);
-//            DbHandler.SaveCustomer(customer);
-//            return true;
-//        }
-//        return false;
-//    }
+        Iterator<Business> itr = businesses.iterator();
 
-    public static Customer getActiveUser() {
+        Business temp;
+
+        while(itr.hasNext()){
+            temp = itr.next();
+            if(temp.getUsername().equals(input)) {
+                return temp;
+            }
+        }
+        return null;
+    }
+    
+    public User getActiveUser() {
         return currentUser;
     }
-
-//    public boolean logout() {
-//        if(currentUser != null){
-//            currentUser = null;
-//            return true;
-//        }
-//
-//        return false;
-//    }
-
 }
