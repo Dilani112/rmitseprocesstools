@@ -3,16 +3,22 @@ package rmitseprocesstools.controller;
 import javax.swing.JOptionPane;
 import rmitseprocesstools.DbHandler;
 import static rmitseprocesstools.controller.AuthController.currentUser;
+
+import rmitseprocesstools.InfoLogger;
 import rmitseprocesstools.controller.AuthController;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.User;
 import rmitseprocesstools.view.UpdateInfoView;
 
+import java.util.logging.Logger;
+
 
 public class CustomerController {
+    private final static Logger LOGGER = Logger.getLogger(InfoLogger.class.getName());
 
     public boolean updateCustomerInfo(String name, String address,String phone ,String q, String a) {
-        
+        LOGGER.entering(getClass().getName(), "updateCustomerInfo");
+
         AuthController controller = new AuthController();
         Customer n = new Customer();
         n = controller.queryCustomer(currentUser.Username);
@@ -21,7 +27,8 @@ public class CustomerController {
             if(n.setName(name) && n.setAddress(address)&& n.setPhone(phone) &&
                 n.setQuestion(q) && n.setAnswer(a) ){
                 DbHandler.SaveCustomer(n);
-                currentUser = n;  
+                currentUser = n;
+                LOGGER.info("Information for Customer " + n.CustomerId + "was successfully updated.");
                 return true;
             }            
         }    

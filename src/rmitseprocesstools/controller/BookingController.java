@@ -16,12 +16,14 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import rmitseprocesstools.DbHandler;
+import rmitseprocesstools.InfoLogger;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.Business;
 import rmitseprocesstools.model.Employee;
@@ -34,6 +36,7 @@ import rmitseprocesstools.model.Activity;
 import rmitseprocesstools.model.BookingStatus;
 
 public class BookingController {
+    private final static Logger LOGGER = Logger.getLogger(InfoLogger.class.getName());
     
     public void populateBookingCustomerDetails(JComboBox jcbc,JTextField phone, JTextField address,boolean f){    
        
@@ -234,6 +237,7 @@ public class BookingController {
     
 
     public boolean cancelBooking(String bookingId){
+        LOGGER.entering(getClass().getName(), "cancelBooking");
 
         List <Booking> list = new ArrayList();
         list = DbHandler.GetBookings();
@@ -243,11 +247,14 @@ public class BookingController {
                booking.Status = BookingStatus.CANCELLED;
                System.out.println(booking.Status);
                DbHandler.SaveBooking(booking);
+               LOGGER.info("Booking " + bookingId + " has been cancelled");
                JOptionPane.showMessageDialog(null,"Booking has been cancelled.","",JOptionPane.ERROR_MESSAGE);
                return true;
             }               
         }
-        return false;         
+
+        LOGGER.info("Booking could not be found with ID " + bookingId);
+        return false;
    }
     
     
@@ -367,6 +374,7 @@ public class BookingController {
     
     
     public void saveBookingMade(int employeeId,int activityId,int pForId,int scheduleId,String bDate){
+        LOGGER.entering(getClass().getName(), "saveBookingMade");
 
        Booking newBooking = new Booking();
        
@@ -389,6 +397,7 @@ public class BookingController {
                 DbHandler.SaveBooking(newBooking);
                 JOptionPane.showMessageDialog(null,"Booking Successful.","",JOptionPane.ERROR_MESSAGE);          
             }else{
+          LOGGER.warning("Unavailable booking time selected");
                 JOptionPane.showMessageDialog(null,"This booking time is not available. Please try with a different time.","",JOptionPane.ERROR_MESSAGE);          
             }
         }catch(Exception e){

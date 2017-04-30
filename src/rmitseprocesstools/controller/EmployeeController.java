@@ -8,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+
+import rmitseprocesstools.InfoLogger;
 import rmitseprocesstools.model.*;
 import rmitseprocesstools.DbHandler;
 import rmitseprocesstools.Utility;
@@ -16,9 +19,12 @@ import static rmitseprocesstools.controller.AuthController.currentUser;
 import rmitseprocesstools.model.Employee;
 
 public class EmployeeController {
-    
+    private final static Logger LOGGER = Logger.getLogger(InfoLogger.class.getName());
+
     public boolean addEmployee(String name, String address,String phone) 
     {
+        LOGGER.entering(getClass().getName(), "addEmployee");
+
         Employee newEmployee = new Employee();
                
         Utility utility = new Utility();
@@ -31,9 +37,11 @@ public class EmployeeController {
             newEmployee.Address = address;
             newEmployee.BusinessId = current.BusinessId;
             DbHandler.SaveEmployee(newEmployee);
-            JOptionPane.showMessageDialog(null,"Employee data successfuly saved.","",JOptionPane.INFORMATION_MESSAGE); 
+            LOGGER.info("New employee " + newEmployee.EmployeeId + " was successfully updated.");
+            JOptionPane.showMessageDialog(null,"Employee data successfuly saved.","",JOptionPane.INFORMATION_MESSAGE);
             return true;
         }else{
+            LOGGER.warning("New employee data was invalid.");
             JOptionPane.showMessageDialog(null,"Saving employee data failed.","",JOptionPane.ERROR_MESSAGE);
         }
         return false;
@@ -41,6 +49,7 @@ public class EmployeeController {
 
    public boolean addEmployeeWorkTime(int nemployeeID,String nDate,String nShrs, String nFhrs,
             String nSmins, String nFmins){
+        LOGGER.entering(getClass().getName(), "addEmployeeWorkTime");
 
         AuthController controller = new  AuthController();
         Business business = (Business) AuthController.currentUser; 
@@ -59,7 +68,8 @@ public class EmployeeController {
             JOptionPane.showMessageDialog(null, "Invalid Start Date/Time and End Date/Time, The End Date/Time can't be the same or earlier than the start time", "", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        DbHandler.SaveWorkTime(newWorkTime);        
+        DbHandler.SaveWorkTime(newWorkTime);
+        LOGGER.info("WorkTime " + newWorkTime.WorkTimeId + " was successfully saved.");
         JOptionPane.showMessageDialog(null,"Employee time has been saved.","",JOptionPane.ERROR_MESSAGE);
         
         return true;
