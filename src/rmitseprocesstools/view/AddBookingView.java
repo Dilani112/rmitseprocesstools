@@ -389,11 +389,14 @@ public class AddBookingView extends javax.swing.JFrame {
             return;
         }
         
-        temp = this.jstAvailableTimes.getSelectedValue().split("");
+        temp = this.jstAvailableTimes.getSelectedValue().split(" ");
         int sId = Integer.parseInt(temp[temp.length-1]);
         String date = this.cmbDateList.getSelectedItem().toString();
         
-        controller.saveBookingMade(empId, 1, cusId, sId, date);
+        temp = this.cmbActivity.getSelectedItem().toString().split("");
+        int actId = Integer.parseInt(temp[temp.length-1]);
+        
+        controller.saveBookingMade(empId, actId, cusId, sId, date);
     }//GEN-LAST:event_btnConfirmBookingActionPerformed
 
     private void txtPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneActionPerformed

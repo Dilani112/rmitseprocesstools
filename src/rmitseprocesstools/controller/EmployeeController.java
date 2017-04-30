@@ -80,19 +80,12 @@ public class EmployeeController {
         List <WorkTime> allEmployeeWorkTimeList = new ArrayList();
         List <WorkTime> employeeAvailabilityList = new ArrayList();
         allEmployeeWorkTimeList =  DbHandler.GetWorkTime();
-        List <Booking> appointments = DbHandler.GetBookings();
         
         for(WorkTime workTime:allEmployeeWorkTimeList){
             
             if(id == workTime.EmployeeId)
             {
                 employeeAvailabilityList.add(workTime);
-                for(Booking app: appointments) {
-                    if(app.BookingDate.isAfter(workTime.StartDateTime) && app.BookingDate.isBefore(workTime.EndDateTime) && app.Status == BookingStatus.CONFIRMED){
-                        employeeAvailabilityList.remove(workTime);
-                        break;
-                    }
-                }
             }            
         }   
                 

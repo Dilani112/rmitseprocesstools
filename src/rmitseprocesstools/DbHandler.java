@@ -409,7 +409,7 @@ private static void Init()
                         temp.PersonForId = rs.getInt("PersonForId");
                         temp.BookingDate = LocalDateTime.ofEpochSecond(rs.getInt("BookingDate"), 0, ZoneOffset.ofHours(10));
                         temp.Status = BookingStatus.values()[rs.getInt("Status")];
-
+                        
                         returnList.add(temp);
                 }
                 rs.close();
