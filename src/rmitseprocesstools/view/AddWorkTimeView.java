@@ -168,30 +168,30 @@ public class AddWorkTimeView extends javax.swing.JFrame {
                                     .addComponent(lblFinishTime))
                                 .addGap(28, 28, 28)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cmbDateList, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(cmbEmployeeList, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(cmbFinishHoursList, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(cmbStartHoursList, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(cmbStartHoursList, 0, 67, Short.MAX_VALUE)
+                                            .addComponent(cmbFinishHoursList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(lblHrs)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(cmbStartMinsList, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addComponent(lblFinishHrs)
                                                 .addGap(18, 18, 18)
-                                                .addComponent(cmbFinishMinsList, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(cmbFinishMinsList, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                                .addComponent(lblHrs)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(cmbStartMinsList, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lblFinishMins)
-                                            .addComponent(lblMins)))))
+                                            .addComponent(lblMins)))
+                                    .addComponent(cmbDateList, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(85, 85, 85)
                                 .addComponent(lblTitle)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 23, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAddTime)
@@ -226,7 +226,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
                     .addComponent(lblFinishHrs)
                     .addComponent(cmbFinishMinsList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblFinishMins))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancel)
                     .addComponent(btnAddTime))
@@ -271,13 +271,13 @@ public class AddWorkTimeView extends javax.swing.JFrame {
         EmployeeController controller = new EmployeeController();
         String text = this.cmbEmployeeList.getSelectedItem().toString();
         String [] temp = text.split("\\s+") ;
-      
-        controller.addEmployeeWorkTime(Integer.parseInt(temp[4].trim()),
+        
+        controller.addEmployeeWorkTime(Integer.parseInt(temp[temp.length-2].trim()),
                                  this.cmbDateList.getSelectedItem().toString(),
                                  this.cmbStartHoursList.getSelectedItem().toString(),
                                  this.cmbFinishHoursList.getSelectedItem().toString(),
                                  this.cmbStartMinsList.getSelectedItem().toString(),
-                                 this.cmbFinishMinsList.getSelectedItem().toString());    
+                                 this.cmbFinishMinsList.getSelectedItem().toString());
            
     }//GEN-LAST:event_btnAddTimeActionPerformed
 

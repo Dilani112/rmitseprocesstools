@@ -34,22 +34,20 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
        String text = this.cmbEmployeeList.getSelectedItem().toString();
        String [] temp = text.split("\\s+") ;
        
-       list = EmployeeController.viewEmployeeAvailability(Integer.parseInt(temp[3].trim()));        
+       list = EmployeeController.viewEmployeeAvailability(Integer.parseInt(temp[temp.length-2].trim()));        
        
        
         DefaultTableModel model = new DefaultTableModel(new Object[]{"WorkTime ID","Date","Start","Finish"}, 0);
         if(!list.isEmpty()){
-            
             for(WorkTime workTime:list){
              model.addRow(new Object[]{
                  workTime.WorkTimeId,
                  workTime.EndDateTime.format(DateTimeFormatter.ISO_DATE),
                  workTime.StartDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME),
-                 workTime.StartDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME),
+                 workTime.EndDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME),
                  });
              }
         }
-        
         
         tblEmployeeAvailability.setModel(model);
     }
