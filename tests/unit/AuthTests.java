@@ -1,9 +1,9 @@
-import model.Customer;
-import model.User;
+import rmitseprocesstools.model.Customer;
+import rmitseprocesstools.model.User;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
-import controller.AuthController;
+import rmitseprocesstools.controller.AuthController;
 
 public class AuthTests {
 
@@ -12,10 +12,10 @@ public class AuthTests {
     // Test Data
     String email  = "the3jana@r.com";
     String password = "pa2ssword";
-    String name = "Joh3n";
+    String name = "John";
     String address = "23313 Bridge Road";
-    String phone = "04132243534";
-    String q = "Whats yo2ur nickname?";
+    String phone = "0410093924";
+    String q = "Whats your nickname?";
     String a = "johnny3";
 
     public AuthTests(){
@@ -24,10 +24,8 @@ public class AuthTests {
 
     @Test
     public void testRegister() {
-        auth.register(email, password, name, address, phone, q, a);
-        Customer usr = auth.getActiveUser();
-
-        System.out.println(usr.getName());
+        auth.register(email,password,password, name, address, phone, q, a);
+        Customer usr = auth.queryCustomer(email);
 
         Assert.assertEquals(email, usr.getUsername());
         Assert.assertEquals(password, usr.getPassword());
@@ -39,13 +37,31 @@ public class AuthTests {
     }
 
     @Test
-    public void testLogin() {
-
+    public void testCustomerLogin() {
+        auth.login(email, password);
+        Customer usr = auth.queryCustomer(email);
+        
+        Assert.assertEquals(email, usr.getUsername());
+        Assert.assertEquals(password, usr.getPassword());
+        Assert.assertEquals(name, usr.getName());
+        Assert.assertEquals(address, usr.getAddress());
+        Assert.assertEquals(phone, usr.getPhone());
+        Assert.assertEquals(q, usr.getQuestion());
+        Assert.assertEquals(a, usr.getAnswer());
+    }
+    
+    @Test
+    public void testBusinessLogin() {
+        auth.login("b1", password);
+        Customer usr = auth.queryCustomer(email);
+        
+        Assert.assertEquals("b1", usr.getUsername());
+        Assert.assertEquals(password, usr.getPassword());
     }
 
     @Test
     public void testResetPassword() {
-
+        
     }
 
     @Test
