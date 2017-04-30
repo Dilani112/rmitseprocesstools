@@ -1,22 +1,17 @@
 package rmitseprocesstools;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
 import javax.swing.JOptionPane;
-import rmitseprocesstools.controller.BussinessOwnerController;
-
+import rmitseprocesstools.controller.AuthController;
+import rmitseprocesstools.controller.CustomerController;
+import rmitseprocesstools.view.LoginView;
 
 public class Rmitseprocesstools {
-
-
+    
     public static void main(String[] args) {
         try
         {
-            BussinessOwnerController controller = new BussinessOwnerController();
-            controller.displayBussinessOwnerOperationsView();
-           
+            LoginView view = new LoginView();
+            view.setVisible(true);           
         }
         catch(Exception e)
         {

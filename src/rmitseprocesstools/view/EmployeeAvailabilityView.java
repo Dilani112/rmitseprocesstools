@@ -1,14 +1,60 @@
 package rmitseprocesstools.view;
 
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import rmitseprocesstools.controller.*;
+import rmitseprocesstools.model.WorkTime;
 
 
 public class EmployeeAvailabilityView extends javax.swing.JFrame {
 
     public EmployeeAvailabilityView() {
         initComponents();
+        setCmbEmployeeListValues();
+        setCmbEmployeeAvailabilityList();
     }
 
+    public final void setCmbEmployeeListValues()
+    {
+       EmployeeController controller = new EmployeeController();
+       List<String> list = controller.constructCmbEmployeeListbyBusinessId();
+        
+       list.forEach((name) -> {
+           cmbEmployeeList.addItem(name);
+        });     
+    }
+    
+    public final void setCmbEmployeeAvailabilityList()
+    {
+       List <WorkTime> list = new ArrayList();
+       
+       String text = this.cmbEmployeeList.getSelectedItem().toString();
+       String [] temp = text.split("\\s+") ;
+       
+       list = EmployeeController.viewEmployeeAvailability(Integer.parseInt(temp[3].trim()));        
+       
+       
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"WorkTime ID","Date","Start","Finish"}, 0);
+        if(!list.isEmpty()){
+            
+            for(WorkTime workTime:list){
+             model.addRow(new Object[]{
+                 workTime.WorkTimeId,
+                 workTime.EndDateTime.format(DateTimeFormatter.ISO_DATE),
+                 workTime.StartDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME),
+                 workTime.StartDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME),
+                 });
+             }
+        }
+        
+        
+        tblEmployeeAvailability.setModel(model);
+    }
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -33,7 +79,13 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
         lblEmployeeList.setText("Employee Name");
 
         cmbEmployeeList.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cmbEmployeeList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEmployeeListActionPerformed(evt);
+            }
+        });
 
+        tblEmployeeAvailability.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         tblEmployeeAvailability.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -49,38 +101,40 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
 
         btnCancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelEmployeeAvailabilityLayout = new javax.swing.GroupLayout(panelEmployeeAvailability);
         panelEmployeeAvailability.setLayout(panelEmployeeAvailabilityLayout);
         panelEmployeeAvailabilityLayout.setHorizontalGroup(
             panelEmployeeAvailabilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEmployeeAvailabilityLayout.createSequentialGroup()
-                .addGroup(panelEmployeeAvailabilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panelEmployeeAvailabilityLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(scrollpanelEmployeeTable, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEmployeeAvailabilityLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(lblEmployeeList)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cmbEmployeeList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEmployeeAvailabilityLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(panelEmployeeAvailabilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEmployeeAvailabilityLayout.createSequentialGroup()
-                        .addComponent(lblTitle)
-                        .addGap(92, 92, 92))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelEmployeeAvailabilityLayout.createSequentialGroup()
-                        .addComponent(btnCancel)
-                        .addContainerGap())))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnCancel))
+                    .addComponent(scrollpanelEmployeeTable, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(panelEmployeeAvailabilityLayout.createSequentialGroup()
+                        .addComponent(lblEmployeeList)
+                        .addGap(36, 36, 36)
+                        .addComponent(cmbEmployeeList, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 74, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(panelEmployeeAvailabilityLayout.createSequentialGroup()
+                .addGap(117, 117, 117)
+                .addComponent(lblTitle)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         panelEmployeeAvailabilityLayout.setVerticalGroup(
             panelEmployeeAvailabilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEmployeeAvailabilityLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
+                .addGap(21, 21, 21)
                 .addComponent(lblTitle)
-                .addGap(38, 38, 38)
+                .addGap(40, 40, 40)
                 .addGroup(panelEmployeeAvailabilityLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEmployeeList)
                     .addComponent(cmbEmployeeList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -97,8 +151,8 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelEmployeeAvailability, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelEmployeeAvailability, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,7 +163,24 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        try {
+           BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();     
+           view.setVisible(true);
+           this.setVisible(false);                
+            
+        } catch (Exception er) {
+            
+            JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void cmbEmployeeListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEmployeeListActionPerformed
+        setCmbEmployeeAvailabilityList();
+    }//GEN-LAST:event_cmbEmployeeListActionPerformed
 
 
     public static void main(String args[]) {

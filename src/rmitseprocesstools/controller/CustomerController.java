@@ -1,53 +1,55 @@
 package rmitseprocesstools.controller;
 
+import javax.swing.JOptionPane;
 import rmitseprocesstools.DbHandler;
 import static rmitseprocesstools.controller.AuthController.currentUser;
-import rmitseprocesstools.model.Business;
-import rmitseprocesstools.model.User;
+import rmitseprocesstools.controller.AuthController;
 import rmitseprocesstools.model.Customer;
+import rmitseprocesstools.model.User;
 import rmitseprocesstools.view.UpdateInfoView;
 
-public class BussinessOwnerController {
-                                
-    public boolean updateBusinessOwnerInfo(String bname,String name, String address,String phone ,String q, String a) {
+
+public class CustomerController {
+
+    public boolean updateCustomerInfo(String name, String address,String phone ,String q, String a) {
         
         AuthController controller = new AuthController();
-        Business n = new Business();
-        n = controller.queryBusiness(currentUser.Username);
+        Customer n = new Customer();
+        n = controller.queryCustomer(currentUser.Username);
         
         if(n!=null){
-            if(n.setBusinessName(bname) && n.setName(name) && n.setAddress(address)&& n.setPhone(phone) &&
+            if(n.setName(name) && n.setAddress(address)&& n.setPhone(phone) &&
                 n.setQuestion(q) && n.setAnswer(a) ){
-                DbHandler.SaveBusiness(n);
+                DbHandler.SaveCustomer(n);
                 currentUser = n;  
                 return true;
             }            
         }    
-        return false;
-
-    }
+        return false;     
+    }  
     
-    public void populateBusinessInfo() {
+    public void populateCustomerInfo() {
         
         AuthController controller = new AuthController();
         
         UpdateInfoView view = new UpdateInfoView();
 
-        Business n = new Business();
-        n = controller.queryBusiness(currentUser.Username);
+        Customer n = new Customer();
+        n = controller.queryCustomer(currentUser.Username);
         
-        String bname="",name="",address="",phone="", q="", a="";
+        String name="",address="",phone="", q="", a="";
         
         if(n!=null){
-            bname = n.BusinessName;
             name = n.Name;
             address=n.Address;
             phone = n.Phone;
             q=n.Question;
             a = n.Answer;
-            view.defaultBusinessInfo(bname,name, address, phone, q, a);
+            view.defaultCustomerInfo(name, address, phone, q, a);
             view.setVisible(true);
         }    
     
     }
+    
+    
 }

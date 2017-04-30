@@ -1,4 +1,4 @@
-package model;
+package rmitseprocesstools.model;
 
 import java.time.LocalDateTime;
 

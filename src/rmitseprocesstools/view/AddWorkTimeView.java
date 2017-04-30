@@ -1,14 +1,66 @@
 package rmitseprocesstools.view;
 
-import rmitseprocesstools.controller.*;
+import java.util.List;
+import javax.swing.JOptionPane;
+import rmitseprocesstools.controller.BussinessOwnerController;
+import rmitseprocesstools.controller.EmployeeController;
 
 
 public class AddWorkTimeView extends javax.swing.JFrame {
 
     public AddWorkTimeView() {
         initComponents();
+        setCmbEmployeeListValues();
+        setCmbDateListValues();
+        setCmbMinsListValues();
+        setCmbHrsListValues();
+        
     }
 
+    public final void setCmbEmployeeListValues()
+    {
+       EmployeeController controller = new EmployeeController();
+       List<String> list = controller.constructCmbEmployeeList();
+        
+       list.forEach((name) -> {
+           cmbEmployeeList.addItem(name);
+        });     
+    }
+    
+    public final void setCmbDateListValues()
+    {
+       EmployeeController controller = new EmployeeController();
+       List<String> list = controller.constructCmbWorkingDatesList();
+       
+       list.forEach((name) -> {
+           cmbDateList.addItem(name);
+        });     
+    }
+    
+    
+    public final void setCmbHrsListValues()
+    {
+       EmployeeController controller = new EmployeeController();
+       List<String> list = controller.constructCmbHoursList();
+       
+       list.forEach((name) -> {
+           cmbStartHoursList.addItem(name);
+           cmbFinishHoursList.addItem(name);
+        });     
+    }
+    
+    public final void setCmbMinsListValues()
+    {
+       EmployeeController controller = new EmployeeController();
+       List<String> list = controller.constructCmbMinsList();
+       
+       list.forEach((name) -> {
+           cmbStartMinsList.addItem(name);
+           cmbFinishMinsList.addItem(name);
+        });     
+    }
+    
+       
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -85,9 +137,19 @@ public class AddWorkTimeView extends javax.swing.JFrame {
 
         btnAddTime.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnAddTime.setText("Add Time");
+        btnAddTime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddTimeActionPerformed(evt);
+            }
+        });
 
         btnCancel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btnCancel.setText("Cancel");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -189,8 +251,37 @@ public class AddWorkTimeView extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+       try {
+            BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();
+            view.setVisible(true);
+            this.setVisible(false);
+
+        } catch (Exception er) {
+
+            JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void btnAddTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddTimeActionPerformed
+        
+        EmployeeController controller = new EmployeeController();
+        String text = this.cmbEmployeeList.getSelectedItem().toString();
+        String [] temp = text.split("\\s+") ;
+      
+        controller.addEmployeeWorkTime(Integer.parseInt(temp[4].trim()),
+                                 this.cmbDateList.getSelectedItem().toString(),
+                                 this.cmbStartHoursList.getSelectedItem().toString(),
+                                 this.cmbFinishHoursList.getSelectedItem().toString(),
+                                 this.cmbStartMinsList.getSelectedItem().toString(),
+                                 this.cmbFinishMinsList.getSelectedItem().toString());    
+           
+    }//GEN-LAST:event_btnAddTimeActionPerformed
+
+    
 
     public static void main(String args[]) {
 

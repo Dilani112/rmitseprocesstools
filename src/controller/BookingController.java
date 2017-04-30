@@ -1,88 +1,113 @@
-package controller;
+package rmitseprocesstools.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Vector;
 import javax.swing.JOptionPane;
-import controller.DbHandler;
-import model.Booking;
-import model.Customer;
-import model.Schedule;
-import model.User;
-import model.BookingStatus;
+import javax.swing.JComboBox;
+import javax.swing.JList;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import rmitseprocesstools.DbHandler;
+import rmitseprocesstools.model.Customer;
+import rmitseprocesstools.model.Business;
+import rmitseprocesstools.model.Employee;
+import rmitseprocesstools.model.Booking;
+import rmitseprocesstools.model.Schedule;
+import static rmitseprocesstools.controller.AuthController.currentUser;
+import rmitseprocesstools.controller.AuthController;
+import rmitseprocesstools.model.Activity;
+import rmitseprocesstools.model.BookingStatus;
 
 public class BookingController {
-	
-    public static List<String> setCustomerNameList() {
-        
-        List<String> nameList = new ArrayList<String>();
-        List<Customer> customerList = DbHandler.GetCustomers();
-        BookingController controller = new BookingController();
-        
-        if(controller.checkCurrentUserIsCustomer(AuthController.getActiveUser()))
-        {
-            String name = controller.getCustomerNameByUsername(AuthController.getActiveUser().Username); 
-            nameList.add(name);
-        
-        }else {
-            customerList.forEach((customer) -> {
-            nameList.add(customer.Name + " [ID - "+customer.CustomerId+" ]");
-            });
-        }
-               
-        return nameList;
     
-    }
+    public void populateBookingCustomerDetails(JComboBox jcbc,JTextField phone, JTextField address,boolean f){    
        
-    public static List<String> getScheduleTimeListValues(String selectedValue) {
-        List<String> DateTimeList = new ArrayList<String>();
-        List<Schedule> scheduleList = DbHandler.GetSchedules();
+        List<Customer> list = DbHandler.GetCustomers();
         
-        scheduleList.forEach((schedule) -> {         
+        if(f){       
+            for(Customer customer:list){                
+                if(currentUser.Username.equals(customer.Username)){                
+                    list.clear();
+                    list.add(customer);
+                    break;                        
+                }
+            }
+
+            for(Customer customer:list){  
+
+                jcbc.addItem(customer.Name+" [CusID]-"+customer.CustomerId);
+            }
             
-            String startTime = schedule.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
-            String endTime = schedule.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
-            String scheduleDay = schedule.StartDateTime.toLocalDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
-
-            if(scheduleDay.equals(selectedValue.substring(0,3))){
+        }else{
+                String text = jcbc.getSelectedItem().toString();
+                String [] temp = text.split("\\-+") ;
                 
-                DateTimeList.add(startTime + " - " + endTime + " " + schedule.ScheduleId); 
-            }        
-                        
-        });        
-        return DateTimeList;    
+                for(Customer customer:list){ 
+                    if( Integer.toString(customer.CustomerId).equals(temp[1].trim())){
+                        phone.setText(customer.Phone);
+                        address.setText(customer.Address);  
+                    }
+                }
+        }            
     }
     
-    public static List<Schedule> getFreeSchedulesForDate(LocalDate date) {
-        List<Schedule> resultList = new ArrayList<Schedule>();
-        List<Schedule> scheduleList = DbHandler.GetSchedules();
+    public void populateBookingBusinessDetails(JComboBox jcbb){  
         
-        scheduleList.forEach((schedule) -> {         
-            String startTime = schedule.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
-            String endTime = schedule.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
-            String scheduleDay = schedule.StartDateTime.toLocalDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        List<Business> list = DbHandler.GetBusinesses();
+        
+        for(Business business:list){                
+                if(currentUser.Username.equals(business.Username)){                
+                    list.clear();
+                    list.add(business);
+                    break;                        
+                }
+        }
+        
+        for(Business business:list){   
 
-            if(schedule.StartDateTime.toLocalDate().equals(date)){
-                resultList.add(schedule); 
-            }                  
-        });        
-        return resultList;    
+            jcbb.addItem(business.Name+" [ID]-"+business.BusinessId);
+        }            
+
     }
     
+   public void populateBookingEmployeeDetails(JComboBox jcbb,JComboBox jcbe){
+       
+        jcbe.removeAllItems();
+        String text = jcbb.getSelectedItem().toString();
+        String [] temp = text.split("\\-+") ;
+        List<Employee> list = DbHandler.GetEmployeesByBusinessId(temp[1].trim());
+        list.forEach((employee) -> {
+            jcbe.addItem(employee.Name+" [ID]-"+employee.EmployeeId);
+
+        });      
+   }
+   
+    public void populateBookingActivityDetails(JComboBox jcbb,JComboBox jcba){
+       
+        jcba.removeAllItems();
+        String text = jcbb.getSelectedItem().toString();
+        String [] temp = text.split("\\-+") ;
+        List<Activity> list = DbHandler.GetActivitiesByBusinessId(temp[1].trim());
+        list.forEach((activity) -> {
+            jcba.addItem(activity.Name+"("+activity.Duration+"Mins)"+" [ID]-"+activity.ActivityId);
+
+        });      
+   }
     
-    public static List<String> getScheduleDateListValues() {
+     
+    public void populateBookingAvailableDates(JComboBox jcba) {
            
-        List<String> DateTimeList = new ArrayList<String>();
         List<Schedule> scheduleList = DbHandler.GetSchedules();
         List<String> DaysList = new ArrayList<String>();
         
@@ -112,53 +137,188 @@ public class BookingController {
             setDays.forEach((day) -> {                  
               
                 if(dayf.format(sDate.getTime()).equals(day)){
-                   DateTimeList.add(day+"  "+datef.format(sDate.getTime()));
+                   jcba.addItem(day+"  "+datef.format(sDate.getTime()));
                 }
             });
             
           sDate.add(Calendar.DAY_OF_MONTH, 1);
         }    
-        return DateTimeList;    
+    
     }
 
     
-   public String getCustomerPhoneById(String id) {
+    public void populateBookingTimes(JList jsta) {
         
-       String phone =null;
-               
-       List<Customer> customerList = DbHandler.GetCustomers();
-
+        Vector <String> DateTimeList = new Vector<String>();
+        List<Schedule> scheduleList = DbHandler.GetSchedules();
         
-        for(Customer customer:customerList){
-          
-            if(id.equals(String.valueOf(customer.CustomerId)))
-            {
-                phone=  customer.Phone;
-            }            
-        }        
-        return phone;    
-   }
-   
-  
-   public String getCustomerNameByUsername(String userName) {
-        
-       String name = null;
-       
-       List<Customer> customerList = DbHandler.GetCustomers();
-        
-        for(Customer customer:customerList){
+        scheduleList.forEach((schedule) -> {         
             
-            if(userName.equals(customer.Username))
+            String startTime = schedule.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+            String endTime = schedule.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+            String scheduleDay = schedule.StartDateTime.toLocalDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+
+                DateTimeList.add(startTime+" - "+endTime+" "+schedule.ScheduleId);      
+                        
+        });   
+        
+        jsta.setListData(DateTimeList); 
+        
+    }
+    
+    
+    public void populateCancellationBooking(JComboBox jcbb,JTextField date, JTextField time, boolean f) {
+        
+        List<Customer> list = new ArrayList();
+        List<Booking> listb = new ArrayList();
+        List<Schedule> lists = new ArrayList();
+        
+        list = DbHandler.GetCustomers();
+        listb = DbHandler.GetBookings();
+        lists = DbHandler.GetSchedules();
+        
+        
+        if(f){
+            for(Customer customer:list){
+                if(currentUser.Username.equals(customer.Username)){                
+                    for(Booking booking:listb){                 
+                        if(booking.PersonForId == customer.CustomerId){
+                            if(booking.Status.equals(BookingStatus.CONFIRMED)){                            
+                                jcbb.addItem(booking.BookingId);
+                            }
+                           
+                        }                        
+                    }                
+                }
+            }
+        }else{
+            
+            String text = jcbb.getSelectedItem().toString();
+            for(Booking b:listb) {
+                if( Integer.toString(b.BookingId).equals(text)){
+                    date.setText(b.BookingDate.toLocalDate().format(DateTimeFormatter.ISO_DATE));
+                    
+                    for(Schedule s:lists){
+                       if(s.ScheduleId==b.ScheduleId){
+                           time.setText(s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"))
+                                   +" - "+s.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a")));
+                       }                        
+                    }
+                    
+                }               
+
+            }
+        }     
+        
+    }
+    
+
+    public boolean cancelBooking(String bookingId){
+
+        List <Booking> list = new ArrayList();
+        list = DbHandler.GetBookings();
+       
+        for(Booking booking:list){
+            if( Integer.toString(booking.BookingId).equals(bookingId)){
+               booking.Status = BookingStatus.CANCELLED; 
+               DbHandler.SaveBooking(booking);
+               JOptionPane.showMessageDialog(null,"Booking has been cancelled.","",JOptionPane.ERROR_MESSAGE);
+               return true;
+            }               
+        }     
+         return false;         
+   }
+    
+    
+    public void populateTrackBooking(JComboBox jcbb,JTextField date, JTextField time, JTextField status, boolean f){
+        
+        List<Customer> list = new ArrayList();
+        List<Booking> listb = new ArrayList();
+        List<Schedule> lists = new ArrayList();
+        
+        list = DbHandler.GetCustomers();
+        listb = DbHandler.GetBookings();
+        lists = DbHandler.GetSchedules();
+        
+        
+        if(f){
+            for(Customer customer:list){
+                if(currentUser.Username.equals(customer.Username)){                
+                    for(Booking booking:listb){                 
+                        if(booking.PersonForId == customer.CustomerId){
+                                                        
+                            jcbb.addItem(booking.BookingId);
+                        }                        
+                    }                
+                }
+            }
+        }else{
+            
+            String text = jcbb.getSelectedItem().toString();
+            for(Booking b:listb) {
+                if( Integer.toString(b.BookingId).equals(text)){
+                    date.setText(b.BookingDate.toLocalDate().format(DateTimeFormatter.ISO_DATE));
+                    status.setText(b.Status.toString());
+                    for(Schedule s:lists){
+                       if(s.ScheduleId==b.ScheduleId){
+                           time.setText(s.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"))
+                                   +" - "+s.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a")));
+                       }                        
+                    }
+                    
+                }               
+
+            }
+        }     
+    
+        
+    }
+    
+    
+    public static List<Booking> getBookingSummaryList(JLabel lbl)
+    {
+        List <Booking> bookingSummary = new ArrayList();
+        List <Booking> listb = new ArrayList();
+        List <Customer> listc = new ArrayList();
+        int custId=0;
+        
+        
+        listb = DbHandler.GetBookings();
+        listc = DbHandler.GetCustomers();
+         
+        for(Customer customer:listc){
+            if(customer.Username.equals(currentUser.Username)){
+                custId=customer.CustomerId;
+                bookingSummary = DbHandler.GetBookingsByPersonId( Integer.toString(custId));
+                lbl.setText("Booking History");
+                return bookingSummary;
+            }
+        }
+        lbl.setText("Booking Summary");
+        return listb;
+    }
+    
+    public static String getScheduleById(int id) {
+        
+       String scheduledata =null;
+       
+       List<Schedule> scheduleList = DbHandler.GetSchedules();
+        
+        for(Schedule schedule:scheduleList){
+            
+            if(id ==schedule.ScheduleId)
             {
-                name =  customer.Name;
+                String startTime = schedule.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+                String endTime = schedule.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+                scheduledata =  startTime+" - "+endTime ;
             }            
         }        
-        return name;    
+        return scheduledata;    
    }
-   
+    
    public static String getCustomerNameById(int id) {
         
-       String name = null;
+       String name =null;
        
        List<Customer> customerList = DbHandler.GetCustomers();
         
@@ -170,88 +330,58 @@ public class BookingController {
             }            
         }        
         return name;    
-   }
-   
-   public static Schedule getScheduleById(int id) {
-	   
-       List<Schedule> scheduleList = DbHandler.GetSchedules();
-        
-        for(Schedule schedule:scheduleList){
-            
-            if(id ==schedule.ScheduleId)
-            {
-                return schedule;
-            }            
-        }
-
-        return null;
-   }
-   
-   public static List<Schedule> getBookedSchedulesByCustomerId(int customerId)
-   {
-	   List<Booking> bookings = DbHandler.GetBookings();
-	   List<Schedule> resultList = new ArrayList<Schedule>();
-	   
-	   for (Booking booking : bookings) {
-		   if(booking.PersonForId == customerId)
-		   {
-			   resultList.add(DbHandler.GetSchedule(booking.ScheduleId));
-		   }
-	   }
-	   
-	   return resultList;
-   }
-   
-   
-   public boolean saveBookingMade(int pForId, int scheduleId){
+   }  
+    
+    public boolean btnCancel(){
+       
+       List<Customer> list = DbHandler.GetCustomers();
+       
+       for (Customer c:list){
+           if(currentUser.Username.equals(c.Username)){
+               return true;
+           }
+       }
+       return false;       
+    } 
+    
+    
+    public void saveBookingMade(int employeeId,int activityId,int pForId,int scheduleId,String bDate){
 
        Booking newBooking = new Booking();
        
-      if (!checkDoubleBooking(scheduleId)){  
+      if (!checkDoubleBooking(scheduleId,bDate)){  
+           
            newBooking.ScheduleId = scheduleId;
            newBooking.PersonForId = pForId;
+           newBooking.EmployeeId= employeeId;
+           newBooking.ActivityId = activityId;
            newBooking.Status = BookingStatus.CONFIRMED;
            newBooking.BookingDate =  LocalDateTime.now();   
-           DbHandler.SaveBooking(newBooking);
-           return true;
-       }
-      return false;
-   }
-   
-   
-   boolean checkDoubleBooking(int Id)
-   {        
+           DbHandler.SaveBooking(newBooking);        
+       }else{
+          JOptionPane.showMessageDialog(null,"This booking time is not available. Please try with a different time.","",JOptionPane.ERROR_MESSAGE);          
+      }
+    }
+    
+    
+    boolean checkDoubleBooking(int Id, String date)
+    {        
        List<Booking> bookingList =  DbHandler.GetBookings();
+       DateTimeFormatter datef = DateTimeFormatter.ofPattern("E  dd/MM/YYYY");
        
        for(Booking booking:bookingList){
-            if(Id == booking.ScheduleId){
+            String scheduleDay = booking.BookingDate.toLocalDate().format(datef);
+            int sId = booking.ScheduleId;
+            JOptionPane.showMessageDialog(null,sId+" "+scheduleDay,"",JOptionPane.ERROR_MESSAGE);          
+            if(Id == sId && date.equals(scheduleDay)){
+                JOptionPane.showMessageDialog(null,"true","",JOptionPane.ERROR_MESSAGE);
                 return true;
-            }
+            }else{
+                JOptionPane.showMessageDialog(null,"false","",JOptionPane.ERROR_MESSAGE);
+                return false;
+            }                 
         }
         return false;
    }
-   
-   
-   Boolean checkCurrentUserIsCustomer(User user)
-   {        
-       List<Customer> customerList = DbHandler.GetCustomers();
-        
-        for(Customer customer:customerList){
-            
-            if(user.Username.equals(customer.Username))
-            {
-                return true;
-            }            
-        }        
-        return false;     
-   }
-  
-   
-    public static List<Booking> getBookingSummaryList()
-    {
-        List <Booking> bookingSummary = new ArrayList();
-        bookingSummary =  DbHandler.GetBookings();
-        return bookingSummary;
-    }
  
 }

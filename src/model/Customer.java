@@ -1,7 +1,5 @@
-package model;
-
-
-import java.util.regex.Pattern;
+package rmitseprocesstools.model;
+import rmitseprocesstools.Utility;
 
 public class Customer extends User {
 	public int CustomerId;
@@ -10,36 +8,36 @@ public class Customer extends User {
 	public String Phone;
 	public String Question;
 	public String Answer;
-
-	public boolean setCustomerId(int input) {
+        
+        Utility utility = new Utility();
+        
+        public boolean setCustomerId(int input) {
 		CustomerId = input;
 		return true;
 	}
-
+        
 	public boolean setName(String input) {
-//		if(Pattern.matches("^[A-Za-z]$",input)){
+		if(utility.validateName(input)){
 			Name = input;
 			return true;
-//		}
-
-//		return false;
+		}
+		return false;
 	}
 
 	public boolean setAddress(String input) {
-//	    if(Pattern.matches("^[A-Za-z0-9,]$", input)){
+	    if(utility.validateAddress(input)){
 	        Address = input;
 	        return true;
-//        }
+            }
+            return false;
+        }
 
-//        return false;
-    }
-
-    public boolean setPhone(String input) {
-//        if(Pattern.matches("^[0-9]$", input)){
+        public boolean setPhone(String input) {
+            if(utility.validatePhone(input)){
             Phone = input;
             return true;
-//        }
-//        return false;
+          }
+          return false;
     }
 
     public boolean setQuestion(String question) {
@@ -76,6 +74,10 @@ public class Customer extends User {
 
     public String getName() {
         return Name;
-    }
-
+    }  
+    
+    public int getId() {
+        return CustomerId;
+    }  
+        
 }

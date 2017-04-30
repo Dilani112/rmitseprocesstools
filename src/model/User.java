@@ -1,13 +1,16 @@
-package model;
+package rmitseprocesstools.model;
+import rmitseprocesstools.Utility;
 
-import java.util.regex.Pattern;
 
 public abstract class User {
-	public String Username;
-	public String Password;
+    
+    public String Username;
+    public String Password;
 
-	public boolean setUsername(String input) {
-        if(Pattern.matches("^\\S+@\\S+$", input)){
+    Utility utility = new Utility();
+        
+    public boolean setUsername(String input) {
+        if(utility.validateEmail(input)){
             Username = input;
             return true;
         }
@@ -15,9 +18,11 @@ public abstract class User {
     }
 
     public boolean setPassword(String input) {
+        if(utility.validatePassword(input)){
         Password = input;
         return true;
-//        return false;
+        }
+        return false;
     }
 
     public String getUsername() {
@@ -27,4 +32,6 @@ public abstract class User {
     public String getPassword() {
 	    return Password;
     }
+
+
 }
