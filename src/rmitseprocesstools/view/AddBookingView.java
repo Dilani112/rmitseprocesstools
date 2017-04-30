@@ -10,6 +10,9 @@ import javax.swing.JOptionPane;
 
 public class AddBookingView extends javax.swing.JFrame {
 
+    boolean first = true;
+    boolean avaiEmp = false;
+    
     public AddBookingView() {
         
         BookingController controller = new BookingController();
@@ -19,7 +22,12 @@ public class AddBookingView extends javax.swing.JFrame {
         controller.populateBookingCustomerDetails(cmbCustomerList,txtPhone,txtAddress,true);
         controller.populateBookingBusinessDetails(cmbBusinessList);  
         controller.populateBookingAvailableDates(cmbDateList);
-        controller.populateBookingTimes(jstAvailableTimes);
+        String[] options = cmbBusinessList.getSelectedItem().toString().split("");
+        int businessId = Integer.parseInt(options[options.length-1]);
+        options = cmbAvailableEmployees.getSelectedItem().toString().split("");
+        int employeeId = Integer.parseInt(options[options.length-1]);
+        controller.populateBookingTimes(jstAvailableTimes, businessId, employeeId, cmbDateList.getSelectedItem().toString());
+        first = false;
     }
     
 
@@ -275,6 +283,14 @@ public class AddBookingView extends javax.swing.JFrame {
 
     private void cmbAvailableEmployeesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbAvailableEmployeesActionPerformed
         // TODO add your handling code here:
+        BookingController controller = new BookingController();
+        if(first || !avaiEmp) return;
+        String[] options = cmbBusinessList.getSelectedItem().toString().split("");
+        int businessId = Integer.parseInt(options[options.length-1]);
+        options = cmbAvailableEmployees.getSelectedItem().toString().split("");
+        int employeeId = Integer.parseInt(options[options.length-1]);
+        jstAvailableTimes.removeAll();
+        controller.populateBookingTimes(jstAvailableTimes, businessId, employeeId, cmbDateList.getSelectedItem().toString());
     }//GEN-LAST:event_cmbAvailableEmployeesActionPerformed
 
     private void txtAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAddressActionPerformed
@@ -283,8 +299,17 @@ public class AddBookingView extends javax.swing.JFrame {
 
     private void cmbBusinessListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbBusinessListActionPerformed
         BookingController controller = new BookingController();
+        avaiEmp = false;
         controller.populateBookingEmployeeDetails(cmbBusinessList,cmbAvailableEmployees);
         controller.populateBookingActivityDetails(cmbBusinessList,cmbActivity);
+        if(first) return;
+        String[] options = cmbBusinessList.getSelectedItem().toString().split("");
+        int businessId = Integer.parseInt(options[options.length-1]);
+        options = cmbAvailableEmployees.getSelectedItem().toString().split("");
+        int employeeId = Integer.parseInt(options[options.length-1]);
+        jstAvailableTimes.removeAll();
+        controller.populateBookingTimes(jstAvailableTimes, businessId, employeeId, cmbDateList.getSelectedItem().toString());
+        avaiEmp = true;
     }//GEN-LAST:event_cmbBusinessListActionPerformed
 
     private void cmbDateListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbDateListActionPerformed
@@ -292,12 +317,23 @@ public class AddBookingView extends javax.swing.JFrame {
         /*jstAvailableTimes.removeAll();
         populateBookingTimes(jstAvailableTimes);
         setCmbTimeListValues(cmbDateList.getSelectedItem().toString());*/
+        BookingController controller = new BookingController();
+        avaiEmp = false;
+        if(first) return;
+        String[] options = cmbBusinessList.getSelectedItem().toString().split("");
+        int businessId = Integer.parseInt(options[options.length-1]);
+        options = cmbAvailableEmployees.getSelectedItem().toString().split("");
+        int employeeId = Integer.parseInt(options[options.length-1]);
+        jstAvailableTimes.removeAll();
+        controller.populateBookingTimes(jstAvailableTimes, businessId, employeeId, cmbDateList.getSelectedItem().toString());
+        avaiEmp = true;
     }//GEN-LAST:event_cmbDateListActionPerformed
 
     private void cmbCustomerListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCustomerListActionPerformed
-        
+        avaiEmp = false;
         BookingController controller = new BookingController(); 
         controller.populateBookingCustomerDetails(cmbCustomerList,txtPhone,txtAddress,false);
+        avaiEmp = true;
     }//GEN-LAST:event_cmbCustomerListActionPerformed
 
     private void cmbCustomerListItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCustomerListItemStateChanged
@@ -336,23 +372,28 @@ public class AddBookingView extends javax.swing.JFrame {
 
     private void btnConfirmBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmBookingActionPerformed
 
-       /* BookingController controller = new BookingController();
-        List<String> list = BookingController.setScheDuleTimeListValues(cmbDateList.getSelectedItem().toString());
+       BookingController controller = new BookingController();
 
         String text = this.cmbCustomerList.getSelectedItem().toString();
-        String [] temp = text.split("\\s+") ;
-
-        String text1 = this.jstAvailableTimes.getSelectedValue();
-        list.forEach((item) -> {
-
-            String [] temp1 = item.split("\\s+");
-            String text3 = temp1[0].trim()+" "+temp1[1].trim()+" "+temp1[2].trim()+" "+temp1[3].trim()+" "+temp1[4].trim();
-
-            if(text1.equals(text3))
-            {
-                controller.saveBookingMade(Integer.parseInt(temp[3].trim()),Integer.parseInt(temp1[5].trim()),cmbDateList.getSelectedItem().toString());
-            }
-        });*/
+        String [] temp = text.split("") ;
+        int cusId = Integer.parseInt(temp[temp.length-1]);
+        
+        temp = this.cmbAvailableEmployees.getSelectedItem().toString().split("");
+        int empId = Integer.parseInt(temp[temp.length-1]);
+        
+        temp = this.cmbBusinessList.getSelectedItem().toString().split("");
+        int busId = Integer.parseInt(temp[temp.length-1]);
+        
+        if(this.jstAvailableTimes.getSelectedIndex() < 0) {
+            JOptionPane.showMessageDialog(null, "Please Select an available Time Slot", "", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        temp = this.jstAvailableTimes.getSelectedValue().split("");
+        int sId = Integer.parseInt(temp[temp.length-1]);
+        String date = this.cmbDateList.getSelectedItem().toString();
+        
+        controller.saveBookingMade(empId, 1, cusId, sId, date);
     }//GEN-LAST:event_btnConfirmBookingActionPerformed
 
     private void txtPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPhoneActionPerformed
