@@ -431,17 +431,17 @@ private static void Init()
 	  try {
 		  if(b.BookingId == 0)
 		  {
-			  sql = "INSERT INTO Booking (ScheduleId,PersonForId,Status,BookingDate) " +
-					"VALUES (?,?,?,?)";
+			  sql = "INSERT INTO Booking (EmployeeId,ActivityId,ScheduleId,PersonForId,Status,BookingDate) " +
+					"VALUES (?,?,?,?,?,?)";
 		  }else{
-			  sql = "UPDATE Booking SET ScheduleId = ?, EmployeeId = ?, ActivityId = ?, PersonForId = ?, Status = ?, BookingDate = ? WHERE BookingId = ?";
+			  sql = "UPDATE Booking SET EmployeeId = ?, ActivityId = ?, ScheduleId = ?, PersonForId = ?, Status = ?, BookingDate = ? WHERE BookingId = ?";
 		  }
 		  
 		  p = c.prepareStatement(sql);		  
 		              
-                  p.setInt(1, b.ScheduleId);
-                  p.setInt(2, b.EmployeeId);
-                  p.setInt(3, b.ActivityId);
+                  p.setInt(1, b.EmployeeId);
+                  p.setInt(2, b.ActivityId);
+                  p.setInt(3, b.ScheduleId);
                   p.setInt(4, b.PersonForId);
                   p.setInt(5, b.Status.ordinal());                  
                   p.setLong(6, b.BookingDate.toEpochSecond(ZoneOffset.ofHours(10)));

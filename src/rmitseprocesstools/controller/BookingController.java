@@ -2,10 +2,13 @@ package rmitseprocesstools.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.time.format.TextStyle;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +27,7 @@ import rmitseprocesstools.model.Business;
 import rmitseprocesstools.model.Employee;
 import rmitseprocesstools.model.Booking;
 import rmitseprocesstools.model.Schedule;
+import rmitseprocesstools.model.WorkTime;
 import static rmitseprocesstools.controller.AuthController.currentUser;
 import rmitseprocesstools.controller.AuthController;
 import rmitseprocesstools.model.Activity;
@@ -147,20 +151,36 @@ public class BookingController {
     }
 
     
-    public void populateBookingTimes(JList jsta) {
+    public void populateBookingTimes(JList jsta, int businessId, int employeeId, String date) {
         
         Vector <String> DateTimeList = new Vector<String>();
         List<Schedule> scheduleList = DbHandler.GetSchedules();
+        List<WorkTime> workList = EmployeeController.viewEmployeeAvailability(employeeId);
+        DateTimeFormatter datef = DateTimeFormatter.ofPattern("E  dd/MM/YYYY");
         
-        scheduleList.forEach((schedule) -> {         
-            
-            String startTime = schedule.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
-            String endTime = schedule.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
-            String scheduleDay = schedule.StartDateTime.toLocalDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        WorkTime availability = null;
+        
+        int startHour = -1, endHour = -1;
+        
+        for(WorkTime workTime:workList){
+            if(workTime.EndDateTime.toLocalDate().format(datef).equals(date)){
+                availability = workTime;
+                startHour = availability.StartDateTime.getHour();
+                endHour = availability.EndDateTime.getHour();
+            }
+        }
+        
 
-                DateTimeList.add(startTime+" - "+endTime+" "+schedule.ScheduleId);      
-                        
-        });   
+        
+        for(Schedule schedule:scheduleList) {
+            System.out.println(schedule.EndDateTime.getDayOfWeek().toString().substring(0, 3));
+            if(schedule.BusinessId == businessId && availability != null && startHour != -1 && startHour <= schedule.StartDateTime.getHour() && endHour >= schedule.EndDateTime.getHour() && date.split("\\s+")[0].equalsIgnoreCase(schedule.EndDateTime.getDayOfWeek().toString().substring(0, 3))){
+                String startTime = schedule.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+                String endTime = schedule.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
+                String scheduleDay = schedule.StartDateTime.toLocalDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+                    DateTimeList.add(startTime+" - "+endTime + " " + schedule.ScheduleId);
+            }
+        };   
         
         jsta.setListData(DateTimeList); 
         
@@ -180,14 +200,14 @@ public class BookingController {
         
         if(f){
             for(Customer customer:list){
-                if(currentUser.Username.equals(customer.Username)){                
+                if(currentUser.Username.equals(customer.Username)){
                     for(Booking booking:listb){                 
                         if(booking.PersonForId == customer.CustomerId){
                             if(booking.Status.equals(BookingStatus.CONFIRMED)){                            
                                 jcbb.addItem(booking.BookingId);
                             }
                            
-                        }                        
+                        }
                     }                
                 }
             }
@@ -217,16 +237,17 @@ public class BookingController {
 
         List <Booking> list = new ArrayList();
         list = DbHandler.GetBookings();
-       
+        
         for(Booking booking:list){
             if( Integer.toString(booking.BookingId).equals(bookingId)){
-               booking.Status = BookingStatus.CANCELLED; 
+               booking.Status = BookingStatus.CANCELLED;
+               System.out.println(booking.Status);
                DbHandler.SaveBooking(booking);
                JOptionPane.showMessageDialog(null,"Booking has been cancelled.","",JOptionPane.ERROR_MESSAGE);
                return true;
             }               
-        }     
-         return false;         
+        }
+        return false;         
    }
     
     
@@ -287,7 +308,7 @@ public class BookingController {
         listc = DbHandler.GetCustomers();
          
         for(Customer customer:listc){
-            if(customer.Username.equals(currentUser.Username)){
+            if(customer.Username.equals(AuthController.currentUser.Username)){
                 custId=customer.CustomerId;
                 bookingSummary = DbHandler.GetBookingsByPersonId( Integer.toString(custId));
                 lbl.setText("Booking History");
@@ -349,18 +370,30 @@ public class BookingController {
 
        Booking newBooking = new Booking();
        
-      if (!checkDoubleBooking(scheduleId,bDate)){  
+        // Until the Activities are implemented
+        activityId = 1;
+        DateTimeFormatter datef = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String[] temp = bDate.split("\\s+");
+        try{
+            LocalDate bDateTime = LocalDate.parse(temp[temp.length-1], datef);
+            LocalDateTime finalDate = LocalDateTime.of(bDateTime, LocalTime.MIN);
+            if (!checkDoubleBooking(scheduleId,bDate)){  
            
-           newBooking.ScheduleId = scheduleId;
-           newBooking.PersonForId = pForId;
-           newBooking.EmployeeId= employeeId;
-           newBooking.ActivityId = activityId;
-           newBooking.Status = BookingStatus.CONFIRMED;
-           newBooking.BookingDate =  LocalDateTime.now();   
-           DbHandler.SaveBooking(newBooking);        
-       }else{
-          JOptionPane.showMessageDialog(null,"This booking time is not available. Please try with a different time.","",JOptionPane.ERROR_MESSAGE);          
-      }
+                newBooking.ScheduleId = scheduleId;
+                newBooking.PersonForId = pForId;
+                newBooking.EmployeeId= employeeId;
+                newBooking.ActivityId = activityId;
+                newBooking.Status = BookingStatus.CONFIRMED;
+                newBooking.BookingDate =  finalDate;
+                System.out.println(newBooking.Status + " " + newBooking.BookingDate);
+                DbHandler.SaveBooking(newBooking);
+                JOptionPane.showMessageDialog(null,"Booking Successful.","",JOptionPane.ERROR_MESSAGE);          
+            }else{
+                JOptionPane.showMessageDialog(null,"This booking time is not available. Please try with a different time.","",JOptionPane.ERROR_MESSAGE);          
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
     
     
@@ -372,12 +405,12 @@ public class BookingController {
        for(Booking booking:bookingList){
             String scheduleDay = booking.BookingDate.toLocalDate().format(datef);
             int sId = booking.ScheduleId;
-            JOptionPane.showMessageDialog(null,sId+" "+scheduleDay,"",JOptionPane.ERROR_MESSAGE);          
+//            JOptionPane.showMessageDialog(null,sId+" "+scheduleDay,"",JOptionPane.ERROR_MESSAGE);          
             if(Id == sId && date.equals(scheduleDay)){
-                JOptionPane.showMessageDialog(null,"true","",JOptionPane.ERROR_MESSAGE);
+//                JOptionPane.showMessageDialog(null,"true","",JOptionPane.ERROR_MESSAGE);
                 return true;
             }else{
-                JOptionPane.showMessageDialog(null,"false","",JOptionPane.ERROR_MESSAGE);
+//                JOptionPane.showMessageDialog(null,"false","",JOptionPane.ERROR_MESSAGE);
                 return false;
             }                 
         }
