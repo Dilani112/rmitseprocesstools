@@ -13,6 +13,7 @@ import rmitseprocesstools.model.*;
 import rmitseprocesstools.DbHandler;
 import rmitseprocesstools.Utility;
 import static rmitseprocesstools.controller.AuthController.currentUser;
+import rmitseprocesstools.model.Employee;
 
 public class EmployeeController {
     
@@ -21,11 +22,14 @@ public class EmployeeController {
         Employee newEmployee = new Employee();
                
         Utility utility = new Utility();
-               
+        
+        Business current = (Business) AuthController.currentUser;
+        
         if(utility.validateName(name) && utility.validatePhone(phone) && utility.validateAddress(address)){            
             newEmployee.Phone = phone;
             newEmployee.Name = name;
-            newEmployee.Address = address;         
+            newEmployee.Address = address;
+            newEmployee.BusinessId = current.BusinessId;
             DbHandler.SaveEmployee(newEmployee);
             JOptionPane.showMessageDialog(null,"Employee data successfuly saved.","",JOptionPane.INFORMATION_MESSAGE); 
             return true;
@@ -39,20 +43,22 @@ public class EmployeeController {
             String nSmins, String nFmins){
 
         AuthController controller = new  AuthController();
-        Business business =new Business(); 
+        Business business = (Business) AuthController.currentUser; 
         WorkTime newWorkTime = new WorkTime();
-        
-        business = controller.queryBusiness(currentUser.Username);
        
         String startDate = nDate+" "+nShrs+":"+nSmins ;
-        String finishDate = nDate+" "+nFhrs+":"+nFmins ;      
+        String finishDate = nDate+" "+nFhrs+":"+nFmins ;
         
         DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
+        
         newWorkTime.EmployeeId = nemployeeID;
         newWorkTime.BusinessId = business.BusinessId;
         newWorkTime.StartDateTime = LocalDateTime.parse(startDate, format);
-        newWorkTime.EndDateTime =  LocalDateTime.parse(finishDate, format);   
+        newWorkTime.EndDateTime =  LocalDateTime.parse(finishDate, format);
+        if(newWorkTime.EndDateTime.compareTo(newWorkTime.StartDateTime) <= 0){
+            JOptionPane.showMessageDialog(null, "Invalid Start Date/Time and End Date/Time, The End Date/Time can't be the same or earlier than the start time", "", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
         DbHandler.SaveWorkTime(newWorkTime);        
         JOptionPane.showMessageDialog(null,"Employee time has been saved.","",JOptionPane.ERROR_MESSAGE);
         
@@ -64,12 +70,19 @@ public class EmployeeController {
         List <WorkTime> allEmployeeWorkTimeList = new ArrayList();
         List <WorkTime> employeeAvailabilityList = new ArrayList();
         allEmployeeWorkTimeList =  DbHandler.GetWorkTime();
+        List <Booking> appointments = DbHandler.GetBookings();
         
         for(WorkTime workTime:allEmployeeWorkTimeList){
             
             if(id == workTime.EmployeeId)
             {
-                employeeAvailabilityList.add(workTime) ;
+                employeeAvailabilityList.add(workTime);
+                for(Booking app: appointments) {
+                    if(app.BookingDate.isAfter(workTime.StartDateTime) && app.BookingDate.isBefore(workTime.EndDateTime) && app.Status == BookingStatus.CONFIRMED){
+                        employeeAvailabilityList.remove(workTime);
+                        break;
+                    }
+                }
             }            
         }   
                 
@@ -83,9 +96,13 @@ public class EmployeeController {
         List<String> employeeNameList = new ArrayList();
         List<Employee> employeeList = DbHandler.GetEmployees();
         
+        Business current = (Business) AuthController.currentUser;
+        
         employeeList.forEach((employee) -> {
-            employeeNameList.add(employee.Name+" [ID - "+employee.EmployeeId+" ]");
-        });        
+            if(employee.BusinessId == current.BusinessId){
+                employeeNameList.add(employee.Name+" [ID - "+employee.EmployeeId+" ]");
+            }
+        });
           
         return employeeNameList;
    }
@@ -169,5 +186,4 @@ public class EmployeeController {
                 
         return employeeNameList;
     }
-    
 }
