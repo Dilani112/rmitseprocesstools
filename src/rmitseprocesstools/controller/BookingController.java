@@ -176,7 +176,7 @@ public class BookingController {
         System.out.println(startHour + " " + endHour);
         
         for(Schedule schedule:scheduleList) {
-            if(schedule.BusinessId == businessId && availability != null && startHour != null && startHour.isBefore(schedule.StartDateTime.toLocalTime()) && endHour.isAfter(schedule.EndDateTime.toLocalTime()) && date.split("\\s+")[0].equalsIgnoreCase(schedule.EndDateTime.getDayOfWeek().toString().substring(0, 3))){
+            if(schedule.BusinessId == businessId && availability != null && startHour != null && (startHour.equals(schedule.StartDateTime.toLocalTime()) || startHour.isBefore(schedule.StartDateTime.toLocalTime())) && (endHour.equals(schedule.EndDateTime.toLocalTime()) || endHour.isAfter(schedule.EndDateTime.toLocalTime())) && date.split("\\s+")[0].equalsIgnoreCase(schedule.EndDateTime.getDayOfWeek().toString().substring(0, 3))){
                 String startTime = schedule.StartDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
                 String endTime = schedule.EndDateTime.toLocalTime().format(DateTimeFormatter.ofPattern("h:mm a"));
                 String scheduleDay = schedule.StartDateTime.toLocalDate().getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
