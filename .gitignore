@@ -36,3 +36,4 @@ bin/
 .classpath
 .nb-gradle/
 .project
+.DS_Store
