@@ -35,6 +35,7 @@ public class LoginView extends javax.swing.JFrame {
         btnExit = new javax.swing.JButton();
         btnForgotPassword = new javax.swing.JButton();
         jpfPassword = new javax.swing.JPasswordField();
+        btnBusinessRegister = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -92,6 +93,8 @@ public class LoginView extends javax.swing.JFrame {
             }
         });
 
+        btnBusinessRegister.setText("Business Register");
+
         javax.swing.GroupLayout panelLoginViewLayout = new javax.swing.GroupLayout(panelLoginView);
         panelLoginView.setLayout(panelLoginViewLayout);
         panelLoginViewLayout.setHorizontalGroup(
@@ -110,9 +113,7 @@ public class LoginView extends javax.swing.JFrame {
                                 .addComponent(btnExit))
                             .addGroup(panelLoginViewLayout.createSequentialGroup()
                                 .addGroup(panelLoginViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelLoginViewLayout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(lblUsername))
+                                    .addComponent(lblUsername)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLoginViewLayout.createSequentialGroup()
                                         .addGap(0, 0, Short.MAX_VALUE)
                                         .addComponent(lblPassword)))
@@ -120,10 +121,13 @@ public class LoginView extends javax.swing.JFrame {
                                 .addGroup(panelLoginViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panelLoginViewLayout.createSequentialGroup()
                                         .addGap(1, 1, 1)
-                                        .addGroup(panelLoginViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(btnForgotPassword)
-                                            .addComponent(jpfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(jpfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLoginViewLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(btnBusinessRegister)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnForgotPassword)))
                         .addGap(18, 18, 18))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLoginViewLayout.createSequentialGroup()
                         .addComponent(lblTitle)
@@ -134,7 +138,7 @@ public class LoginView extends javax.swing.JFrame {
             .addGroup(panelLoginViewLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(lblTitle)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(panelLoginViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUsername))
@@ -143,7 +147,9 @@ public class LoginView extends javax.swing.JFrame {
                     .addComponent(jpfPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnForgotPassword)
+                .addGroup(panelLoginViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnForgotPassword)
+                    .addComponent(btnBusinessRegister))
                 .addGap(18, 18, 18)
                 .addGroup(panelLoginViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelLoginViewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -260,6 +266,7 @@ public class LoginView extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBusinessRegister;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnForgotPassword;
     private javax.swing.JButton btnLogin;
