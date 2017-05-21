@@ -36,6 +36,8 @@ public class AuthTests {
         BusinessData.put("phone", UserData.get("phone"));
         BusinessData.put("q", UserData.get("q"));
         BusinessData.put("a", UserData.get("a"));
+        BusinessData.put("start", "9:00");
+        BusinessData.put("end", "17:00");
         
         auth = new AuthController();
     }
@@ -80,11 +82,17 @@ public class AuthTests {
     }
     
     @Test
+    public void testLogout() {
+        auth.logout();
+        Assert.assertNull(AuthController.currentUser);
+    }
+    
+    @Test
     public void testBusinessRegister() {
         auth.registerBusiness(BusinessData.get("username"),
                     BusinessData.get("password"), BusinessData.get("bname"), 
                     BusinessData.get("ownerName"), BusinessData.get("address"), 
-                    BusinessData.get("phone"), BusinessData.get("q"), BusinessData.get("a"));
+                    BusinessData.get("phone"), BusinessData.get("q"), BusinessData.get("a"), BusinessData.get("start"), BusinessData.get("end"));
         
         Business usr = auth.queryBusiness(BusinessData.get("username"));
         

@@ -193,29 +193,29 @@ public class DbHandlerTests {
 		System.setErr(null);
 	}
 	
-	@Test
-	public void CanListSchedules()
-	{
-		List<Schedule> schedules = DbHandler.GetSchedules();
-		Assert.assertEquals(1, schedules.get(0).BusinessId);
-		Assert.assertEquals(LocalDateTime.of(2017, 4, 3, 9, 00), schedules.get(0).StartDateTime);
-		Assert.assertEquals(LocalDateTime.of(2017, 4, 3, 9, 30), schedules.get(0).EndDateTime);
-	}
-	
-	@Test
-	public void CanAddSchedule()
-	{
-		Schedule s = new Schedule();
-		s.ScheduleId = 0;
-		s.BusinessId = 0;
-		s.StartDateTime = LocalDateTime.of(2017, 4, 3, 9, 00);
-		s.EndDateTime = LocalDateTime.of(2017, 4, 3, 9, 30);
-		
-		DbHandler.SaveSchedule(s);
-		List<Schedule> schedules = DbHandler.GetSchedules();
-
-		Assert.assertEquals(s.StartDateTime, schedules.get(3).StartDateTime);
-	}
+//	@Test
+//	public void CanListSchedules()
+//	{
+//		List<Schedule> schedules = DbHandler.GetSchedules();
+//		Assert.assertEquals(1, schedules.get(0).BusinessId);
+//		Assert.assertEquals(LocalDateTime.of(2017, 4, 3, 9, 00), schedules.get(0).StartDateTime);
+//		Assert.assertEquals(LocalDateTime.of(2017, 4, 3, 9, 30), schedules.get(0).EndDateTime);
+//	}
+//	
+//	@Test
+//	public void CanAddSchedule()
+//	{
+//		Schedule s = new Schedule();
+//		s.ScheduleId = 0;
+//		s.BusinessId = 0;
+//		s.StartDateTime = LocalDateTime.of(2017, 4, 3, 9, 00);
+//		s.EndDateTime = LocalDateTime.of(2017, 4, 3, 9, 30);
+//		
+//		DbHandler.SaveSchedule(s);
+//		List<Schedule> schedules = DbHandler.GetSchedules();
+//
+//		Assert.assertEquals(s.StartDateTime, schedules.get(3).StartDateTime);
+//	}
 	
 	@Test
 	public void CanListBookings()
