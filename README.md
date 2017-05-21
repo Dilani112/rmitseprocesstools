@@ -22,10 +22,10 @@ Mohammad
 Please follow this [link](https://www.lucidchart.com/invitations/accept/d3e0a282-f72b-4b0a-8d4e-c1dd712b9e14)
 
 ## Peer Review
-Thejana Satanarachchi - Test Suite, Code Reviews, Business Registration - 25%
-Jake Westrip - Refactoring Code, Code Reviews, Booking Tests - 25%
-Lip Yang Koay - Add Services, Business Registration UI - 25%
-Dilani Fernando - Bug Fixes, Refactoring, Documentation, Meeting Notes - 25%
+Thejana Satanarachchi - Test Suite, Code Reviews, Business Registration - 25%  
+Jake Westrip - Refactoring Code, Code Reviews, Booking Tests - 25%  
+Lip Yang Koay - Add Services, Business Registration UI - 25%  
+Dilani Fernando - Bug Fixes, Refactoring, Documentation, Meeting Notes - 25%  
 
 -----
 
