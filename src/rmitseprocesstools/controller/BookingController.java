@@ -383,7 +383,7 @@ public class BookingController {
         return "";
     }
     
-    public void saveBookingMade(int employeeId,int businessId,int activityId,int pForId,String startTimeString,String endTimeString,String bDate){
+    public boolean saveBookingMade(int employeeId,int businessId,int activityId,int pForId,String startTimeString,String endTimeString,String bDate){
         LOGGER.entering(getClass().getName(), "saveBookingMade");
        
         List<Activity> activities = DbHandler.GetActivities();
@@ -428,8 +428,13 @@ public class BookingController {
                 e.printStackTrace();
             }
 
-        if(doubleBooked) JOptionPane.showMessageDialog(null,"This booking time is not available. Please try with a different time.","",JOptionPane.ERROR_MESSAGE);          
-        if(bookingMade)JOptionPane.showMessageDialog(null,"Booking Successful.","",JOptionPane.ERROR_MESSAGE);
+        if(doubleBooked) JOptionPane.showMessageDialog(null,"This booking time is not available. Please try with a different time.","",JOptionPane.ERROR_MESSAGE);
+        if(bookingMade) {
+            JOptionPane.showMessageDialog(null, "Booking Successful.", "", JOptionPane.ERROR_MESSAGE);
+            return true;
+        }
+
+        return false;
     }
     
     
