@@ -94,6 +94,11 @@ public class LoginView extends javax.swing.JFrame {
         });
 
         btnBusinessRegister.setText("Business Register");
+        btnBusinessRegister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBusinessRegisterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelLoginViewLayout = new javax.swing.GroupLayout(panelLoginView);
         panelLoginView.setLayout(panelLoginViewLayout);
@@ -252,6 +257,12 @@ public class LoginView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnForgotPasswordActionPerformed
+
+    private void btnBusinessRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBusinessRegisterActionPerformed
+        // TODO add your handling code here:
+        new BusinessRegistrationView().setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnBusinessRegisterActionPerformed
 
     /**
      * @param args the command line arguments

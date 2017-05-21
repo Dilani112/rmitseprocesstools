@@ -18,13 +18,13 @@ public class AuthController {
     
     public static User currentUser;
     
-    public boolean registerBusiness(String username, String password, String bname, String ownerName, String address, String phone, String q, String answer) {
+    public boolean registerBusiness(String username, String password, String bname, String ownerName, String address, String phone, String q, String answer, String start, String end) {
         UserFactory userFactory = new UserFactory();
         
         Business n = (Business) userFactory.createNewUser("Business");
         
         if(n.setUsername(username) && n.setPassword(password) && n.setBusinessName(bname) && n.setName(ownerName) && n.setAddress(address) &&
-                n.setPhone(phone) && n.setQuestion(q) && n.setAnswer(answer)) {
+                n.setPhone(phone) && n.setQuestion(q) && n.setAnswer(answer) && n.setStartTime(start) && n.setEndTime(end)) {
             DbHandler.SaveBusiness(n);
             currentUser = n;
             LOGGER.info("Business Registered successfully as " + currentUser.getUsername());

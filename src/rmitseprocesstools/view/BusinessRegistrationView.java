@@ -5,6 +5,9 @@
  */
 package rmitseprocesstools.view;
 
+import javax.swing.JOptionPane;
+import rmitseprocesstools.controller.AuthController;
+
 /**
  *
  * @author billy
@@ -261,33 +264,32 @@ public class BusinessRegistrationView extends javax.swing.JFrame {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
 
-//        if( jpfBusinessPassword.getText().equals(jpfConfirmBusinessPassword.getText())){
-//
-//            JOptionPane.showMessageDialog(null,
-//                "Business Registration successfull.",
-//                "",JOptionPane.INFORMATION_MESSAGE);
-//            view.setVisible(true);
-//            this.setVisible(false);
-//
-//        }else{
-//            JOptionPane.showMessageDialog(null,
-//                "Password confirmation is invalid. Please try again",
-//                "",JOptionPane.ERROR_MESSAGE);
-//            jpfBusinessPassword.setText("");
-//        }
+        if( jpfBusinessPassword.getText().equals(jpfConfirmBusinessPassword.getText())){
+
+            AuthController authctrl = new AuthController();
+            
+            if(authctrl.registerBusiness(txtBusinessUserName.getText(), jpfBusinessPassword.getText(), txtBusinessName.getText(), "", txtBusinessAddress.getText(), txtBusinessPhone.getText(), cmbBusinessQuestion.getSelectedItem().toString(), txtBusinessAnswer.getText(), txtBusinessStartTime.getText(), txtBusinessStartTime1.getText())){
+                JOptionPane.showMessageDialog(null,
+                "Business Registration successfull.",
+                "",JOptionPane.INFORMATION_MESSAGE);
+                this.setVisible(false);
+                BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();
+                view.updateBusinessData();
+                view.setVisible(true);
+            }
+        }else{
+            JOptionPane.showMessageDialog(null,
+                "Password confirmation is invalid. Please try again",
+                "",JOptionPane.ERROR_MESSAGE);
+            jpfBusinessPassword.setText("");
+        }
 
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-//        try {
-//            LoginView view = new LoginView();
-//            view.setVisible(true);
-//            this.setVisible(false);
-//
-//        } catch (Exception er) {
-//
-//            JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
-//        }
+            LoginView view = new LoginView();
+            view.setVisible(true);
+            this.setVisible(false);
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void txtBusinessAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusinessAddressActionPerformed

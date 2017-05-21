@@ -13,6 +13,8 @@ public class Business extends User {
     public String Question;
     public String Answer;
     public String BusinessName;
+    public String startTime;
+    public String endTime;
     
     Utility utility = new Utility();
         
@@ -22,19 +24,13 @@ public class Business extends User {
 	}
 
 	public boolean setName(String input) {
-		if(utility.validateName(input)){
-			Name = input;
-			return true;
-		}
-		return false;
+		Name = input;
+		return true;
 	}
         
         public boolean setBusinessName(String input) {
-		if(utility.validateName(input)){
-			BusinessName = input;
-			return true;
-		}
-		return false;
+		BusinessName = input;
+		return true;
 	}
 
 	public boolean setAddress(String input) {
@@ -68,7 +64,24 @@ public class Business extends User {
         }
         return false;
     }
+    
+    public boolean setStartTime(String input) {
+        if(!"".equals(input)){
+            startTime = input;
+            return true;
+        }
+        return false;
+    }
 
+    public boolean setEndTime(String input) {
+        if(!"".equals(input)){
+            endTime = input;
+            return true;
+        }
+        return false;
+    }
+
+    
     public String getAnswer(){
 	    return Answer;
     }
@@ -91,6 +104,14 @@ public class Business extends User {
 
     public String getBusinessName() {
         return BusinessName;
+    }
+    
+    public String getStartTime() {
+        return startTime;
+    }
+    
+    public String getEndTime() {
+        return endTime;
     }
     
 }
