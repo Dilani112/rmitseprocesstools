@@ -114,7 +114,7 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
         panelEmployeeManagement.setBackground(new java.awt.Color(204, 204, 204));
 
         btnAddWorkTimes.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        btnAddWorkTimes.setText("Add Work Times");
+        btnAddWorkTimes.setText("Set Work Times");
         btnAddWorkTimes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddWorkTimesActionPerformed(evt);
