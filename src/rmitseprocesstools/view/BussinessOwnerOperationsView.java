@@ -3,14 +3,18 @@ package rmitseprocesstools.view;
 import rmitseprocesstools.controller.*;
 import javax.swing.JOptionPane;
 import rmitseprocesstools.controller.BussinessOwnerController;
+import rmitseprocesstools.model.Business;
 
 
 public class BussinessOwnerOperationsView extends javax.swing.JFrame {
-
-
+    
+    public void updateBusinessData(){
+        Business n = new AuthController().queryBusiness(AuthController.currentUser.Username);
+        jLabel1.setText(n.BusinessName);
+    }
+    
     public BussinessOwnerOperationsView() {
         initComponents();
-        
     }
 
     @SuppressWarnings("unchecked")
@@ -34,6 +38,7 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
         panelPersonal = new javax.swing.JPanel();
         lblPersonalinfo = new javax.swing.JLabel();
         btnUpdateinfo = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -152,13 +157,13 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
         panelEmployeeManagementLayout.setVerticalGroup(
             panelEmployeeManagementLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEmployeeManagementLayout.createSequentialGroup()
-                .addGap(7, 7, 7)
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(panelEmployeeManagementLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnAddEmployee)
                     .addComponent(lblEmployeeManagement))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAddWorkTimes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnViewEmployeeAvailability)
                 .addGap(16, 16, 16))
         );
@@ -205,16 +210,26 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("jLabel1");
+        jLabel1.setName("lblBusinessName"); // NOI18N
+        jLabel1.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                jLabel1ComponentAdded(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelBussinessOwnerOperationsLayout = new javax.swing.GroupLayout(panelBussinessOwnerOperations);
         panelBussinessOwnerOperations.setLayout(panelBussinessOwnerOperationsLayout);
         panelBussinessOwnerOperationsLayout.setHorizontalGroup(
             panelBussinessOwnerOperationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelBussinessOwnerOperationsLayout.createSequentialGroup()
-                .addGroup(panelBussinessOwnerOperationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBussinessOwnerOperationsLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBussinessOwnerOperationsLayout.createSequentialGroup()
+                .addGroup(panelBussinessOwnerOperationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelBussinessOwnerOperationsLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnLogout))
-                    .addGroup(panelBussinessOwnerOperationsLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelBussinessOwnerOperationsLayout.createSequentialGroup()
                         .addGroup(panelBussinessOwnerOperationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelBussinessOwnerOperationsLayout.createSequentialGroup()
                                 .addContainerGap()
@@ -224,29 +239,36 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
                                 .addComponent(lblTitle))
                             .addGroup(panelBussinessOwnerOperationsLayout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(panelBookingManagement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(panelBookingManagement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelBussinessOwnerOperationsLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(panelPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(panelBussinessOwnerOperationsLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelBussinessOwnerOperationsLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(76, 76, 76))
         );
         panelBussinessOwnerOperationsLayout.setVerticalGroup(
             panelBussinessOwnerOperationsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBussinessOwnerOperationsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel1)
                 .addGap(28, 28, 28)
                 .addComponent(panelPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelBookingManagement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelEmployeeManagement, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnLogout)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
+
+        jLabel1.getAccessibleContext().setAccessibleName("lblBusinessName");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -261,8 +283,8 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(panelBussinessOwnerOperations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(panelBussinessOwnerOperations, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         panelBussinessOwnerOperations.getAccessibleContext().setAccessibleName("");
@@ -359,6 +381,10 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnUpdateinfoActionPerformed
 
+    private void jLabel1ComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_jLabel1ComponentAdded
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jLabel1ComponentAdded
+
 
     public static void main(String args[]) {
 
@@ -396,6 +422,7 @@ public class BussinessOwnerOperationsView extends javax.swing.JFrame {
     private javax.swing.JButton btnUpdateinfo;
     private javax.swing.JButton btnViewBookingSummary;
     private javax.swing.JButton btnViewEmployeeAvailability;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblBookingManagement;

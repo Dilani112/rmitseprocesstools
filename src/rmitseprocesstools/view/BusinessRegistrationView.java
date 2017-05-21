@@ -261,33 +261,33 @@ public class BusinessRegistrationView extends javax.swing.JFrame {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
 
-        if( jpfBusinessPassword.getText().equals(jpfConfirmBusinessPassword.getText())){
-
-            JOptionPane.showMessageDialog(null,
-                "Business Registration successfull.",
-                "",JOptionPane.INFORMATION_MESSAGE);
-            view.setVisible(true);
-            this.setVisible(false);
-
-        }else{
-            JOptionPane.showMessageDialog(null,
-                "Password confirmation is invalid. Please try again",
-                "",JOptionPane.ERROR_MESSAGE);
-            jpfBusinessPassword.setText("");
-        }
+//        if( jpfBusinessPassword.getText().equals(jpfConfirmBusinessPassword.getText())){
+//
+//            JOptionPane.showMessageDialog(null,
+//                "Business Registration successfull.",
+//                "",JOptionPane.INFORMATION_MESSAGE);
+//            view.setVisible(true);
+//            this.setVisible(false);
+//
+//        }else{
+//            JOptionPane.showMessageDialog(null,
+//                "Password confirmation is invalid. Please try again",
+//                "",JOptionPane.ERROR_MESSAGE);
+//            jpfBusinessPassword.setText("");
+//        }
 
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        try {
-            LoginView view = new LoginView();
-            view.setVisible(true);
-            this.setVisible(false);
-
-        } catch (Exception er) {
-
-            JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
-        }
+//        try {
+//            LoginView view = new LoginView();
+//            view.setVisible(true);
+//            this.setVisible(false);
+//
+//        } catch (Exception er) {
+//
+//            JOptionPane.showMessageDialog(null,er.getMessage(),"",JOptionPane.ERROR_MESSAGE);
+//        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void txtBusinessAddressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusinessAddressActionPerformed
