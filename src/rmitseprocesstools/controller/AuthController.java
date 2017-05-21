@@ -4,6 +4,7 @@ import rmitseprocesstools.InfoLogger;
 import rmitseprocesstools.model.Business;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.User;
+import rmitseprocesstools.model.UserFactory;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -17,10 +18,28 @@ public class AuthController {
     
     public static User currentUser;
     
+    public boolean registerBusiness(String username, String password, String bname, String ownerName, String address, String phone, String q, String answer, String start, String end) {
+        UserFactory userFactory = new UserFactory();
+        
+        Business n = (Business) userFactory.createNewUser("Business");
+        
+        if(n.setUsername(username) && n.setPassword(password) && n.setBusinessName(bname) && n.setName(ownerName) && n.setAddress(address) &&
+                n.setPhone(phone) && n.setQuestion(q) && n.setAnswer(answer) && n.setStartTime(start) && n.setEndTime(end)) {
+            DbHandler.SaveBusiness(n);
+            currentUser = n;
+            LOGGER.info("Business Registered successfully as " + currentUser.getUsername());
+            return true;
+        }
+        
+        return false;
+    }
+    
     public boolean register(String email, String password,String confirmpwd, String name, String address, String phone, String q, String a){
         LOGGER.entering(getClass().getName(), "register");
 
-        Customer n = new Customer();
+        UserFactory userFactory = new UserFactory();
+        
+        Customer n = (Customer) userFactory.createNewUser("Customer");
         
         if(n.setUsername(email) && n.setPassword(password) && n.setName(name) &&
            n.setAddress(address)&& n.setPhone(phone) && n.setQuestion(q) && 

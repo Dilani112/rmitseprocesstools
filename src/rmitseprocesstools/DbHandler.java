@@ -182,8 +182,8 @@ private static void Init()
 	  try {
 		  if(b.BusinessId == 0)
 		  {
-			  sql = "INSERT INTO Business (Username, Password, Name, Address, Phone, Question, Answer, BusinessName) " +
-					"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			  sql = "INSERT INTO Business (Username, Password, Name, Address, Phone, Question, Answer, BusinessName, BusinessStart, BusinessEnd) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		  }else{
 			  sql = "UPDATE Business " +
 		            "SET Username = ?, Password = ?, Name = ?, Address = ?, Phone = ?, Question = ?, Answer = ?, BusinessName = ? " +
@@ -200,10 +200,14 @@ private static void Init()
 		  p.setString(6, b.Question);
 		  p.setString(7, b.Answer);
 		  p.setString(8, b.BusinessName);
+                  p.setString(9, b.startTime);
+                  p.setString(10, b.endTime);
 		  
 		  if(b.BusinessId != 0)
 			  p.setInt(9, b.BusinessId);
 		  
+                  System.out.println(sql);
+                  
 		  p.execute();
 		  
 		  if(b.BusinessId == 0)
