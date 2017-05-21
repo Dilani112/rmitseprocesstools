@@ -11,33 +11,20 @@ public class AddWorkTimeView extends javax.swing.JFrame {
     public AddWorkTimeView() {
         initComponents();
         setCmbEmployeeListValues();
-        setCmbDateListValues();
         setCmbMinsListValues();
         setCmbHrsListValues();
         
     }
 
-    public final void setCmbEmployeeListValues()
-    {
-       EmployeeController controller = new EmployeeController();
-       List<String> list = controller.constructCmbEmployeeList();
-        
-       list.forEach((name) -> {
-           cmbEmployeeList.addItem(name);
-        });     
+    public final void setCmbEmployeeListValues() {
+        EmployeeController controller = new EmployeeController();
+        List<String> list = controller.constructCmbEmployeeList();
+
+        list.forEach((name) -> {
+            cmbEmployeeList.addItem(name);
+        });
     }
-    
-    public final void setCmbDateListValues()
-    {
-       EmployeeController controller = new EmployeeController();
-       List<String> list = controller.constructCmbWorkingDatesList();
-       
-       list.forEach((name) -> {
-           cmbDateList.addItem(name);
-        });     
-    }
-    
-    
+
     public final void setCmbHrsListValues()
     {
        EmployeeController controller = new EmployeeController();
@@ -71,9 +58,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
         lblFinishHrs = new javax.swing.JLabel();
         cmbEmployeeList = new javax.swing.JComboBox<>();
         cmbFinishMinsList = new javax.swing.JComboBox<>();
-        lblDate = new javax.swing.JLabel();
         lblFinishMins = new javax.swing.JLabel();
-        cmbDateList = new javax.swing.JComboBox<>();
         lblStartTime = new javax.swing.JLabel();
         cmbStartHoursList = new javax.swing.JComboBox<>();
         lblHrs = new javax.swing.JLabel();
@@ -83,6 +68,15 @@ public class AddWorkTimeView extends javax.swing.JFrame {
         cmbFinishHoursList = new javax.swing.JComboBox<>();
         btnAddTime = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        chkMonday = new javax.swing.JCheckBox();
+        chkThursday = new javax.swing.JCheckBox();
+        chkSaturday = new javax.swing.JCheckBox();
+        chkWednesday = new javax.swing.JCheckBox();
+        chkSunday = new javax.swing.JCheckBox();
+        chkFriday = new javax.swing.JCheckBox();
+        chkTuesday = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -104,15 +98,8 @@ public class AddWorkTimeView extends javax.swing.JFrame {
 
         cmbFinishMinsList.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
 
-        lblDate.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        lblDate.setText("Date");
-
         lblFinishMins.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblFinishMins.setText("Mins");
-
-        cmbDateList.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
-        cmbDateList.setToolTipText("Select the date");
-        cmbDateList.setName("cmbDate"); // NOI18N
 
         lblStartTime.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblStartTime.setText("Start Time");
@@ -151,6 +138,73 @@ public class AddWorkTimeView extends javax.swing.JFrame {
             }
         });
 
+        jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel1.setText("Roster");
+
+        chkMonday.setText("Monday");
+
+        chkThursday.setText("Thursday");
+
+        chkSaturday.setText("Saturday");
+
+        chkWednesday.setText("Wednesday");
+
+        chkSunday.setText("Sunday");
+
+        chkFriday.setText("Friday");
+
+        chkTuesday.setText("Tuesday");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkMonday)
+                            .addComponent(chkThursday))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkTuesday)
+                            .addComponent(chkFriday)
+                            .addComponent(chkSunday)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(146, 146, 146)
+                        .addComponent(jLabel1)
+                        .addGap(0, 14, Short.MAX_VALUE)))
+                .addGap(60, 60, 60)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(chkWednesday)
+                    .addComponent(chkSaturday))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(chkMonday)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chkThursday))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(chkWednesday)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chkSaturday))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(chkTuesday)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chkFriday)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(chkSunday))))
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -163,7 +217,6 @@ public class AddWorkTimeView extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblEmployeeName)
-                                    .addComponent(lblDate)
                                     .addComponent(lblStartTime)
                                     .addComponent(lblFinishTime))
                                 .addGap(28, 28, 28)
@@ -186,8 +239,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(lblFinishMins)
-                                            .addComponent(lblMins)))
-                                    .addComponent(cmbDateList, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(lblMins)))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(85, 85, 85)
                                 .addComponent(lblTitle)))
@@ -196,7 +248,10 @@ public class AddWorkTimeView extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAddTime)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCancel)))
+                        .addComponent(btnCancel))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -210,10 +265,6 @@ public class AddWorkTimeView extends javax.swing.JFrame {
                     .addComponent(lblEmployeeName))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblDate)
-                    .addComponent(cmbDateList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblStartTime)
                     .addComponent(cmbStartHoursList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblHrs)
@@ -226,7 +277,9 @@ public class AddWorkTimeView extends javax.swing.JFrame {
                     .addComponent(lblFinishHrs)
                     .addComponent(cmbFinishMinsList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblFinishMins))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCancel)
                     .addComponent(btnAddTime))
@@ -255,7 +308,7 @@ public class AddWorkTimeView extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-       try {
+        try {
             BussinessOwnerOperationsView view = new BussinessOwnerOperationsView();
             view.setVisible(true);
             this.setVisible(false);
@@ -267,18 +320,24 @@ public class AddWorkTimeView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnAddTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddTimeActionPerformed
-        
+
         EmployeeController controller = new EmployeeController();
         String text = this.cmbEmployeeList.getSelectedItem().toString();
         String [] temp = text.split("\\s+") ;
-        
+
         controller.addEmployeeWorkTime(Integer.parseInt(temp[temp.length-2].trim()),
-                                 this.cmbDateList.getSelectedItem().toString(),
-                                 this.cmbStartHoursList.getSelectedItem().toString(),
-                                 this.cmbFinishHoursList.getSelectedItem().toString(),
-                                 this.cmbStartMinsList.getSelectedItem().toString(),
-                                 this.cmbFinishMinsList.getSelectedItem().toString());
-           
+            this.cmbStartHoursList.getSelectedItem().toString(),
+            this.cmbFinishHoursList.getSelectedItem().toString(),
+            this.cmbStartMinsList.getSelectedItem().toString(),
+            this.cmbFinishMinsList.getSelectedItem().toString(),
+                chkMonday.isSelected(),
+                chkTuesday.isSelected(),
+                chkWednesday.isSelected(),
+                chkThursday.isSelected(),
+                chkFriday.isSelected(),
+                chkSaturday.isSelected(),
+                chkSunday.isSelected());
+
     }//GEN-LAST:event_btnAddTimeActionPerformed
 
     
@@ -314,14 +373,21 @@ public class AddWorkTimeView extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAddTime;
     private javax.swing.JButton btnCancel;
-    private javax.swing.JComboBox<String> cmbDateList;
+    private javax.swing.JCheckBox chkFriday;
+    private javax.swing.JCheckBox chkMonday;
+    private javax.swing.JCheckBox chkSaturday;
+    private javax.swing.JCheckBox chkSunday;
+    private javax.swing.JCheckBox chkThursday;
+    private javax.swing.JCheckBox chkTuesday;
+    private javax.swing.JCheckBox chkWednesday;
     private javax.swing.JComboBox<String> cmbEmployeeList;
     private javax.swing.JComboBox<String> cmbFinishHoursList;
     private javax.swing.JComboBox<String> cmbFinishMinsList;
     private javax.swing.JComboBox<String> cmbStartHoursList;
     private javax.swing.JComboBox<String> cmbStartMinsList;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JLabel lblDate;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblEmployeeName;
     private javax.swing.JLabel lblFinishHrs;
     private javax.swing.JLabel lblFinishMins;

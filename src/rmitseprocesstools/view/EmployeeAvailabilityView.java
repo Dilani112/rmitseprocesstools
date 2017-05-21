@@ -3,7 +3,7 @@ package rmitseprocesstools.view;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import rmitseprocesstools.controller.*;
 import rmitseprocesstools.model.WorkTime;
@@ -34,22 +34,39 @@ public class EmployeeAvailabilityView extends javax.swing.JFrame {
        String text = this.cmbEmployeeList.getSelectedItem().toString();
        String [] temp = text.split("\\s+") ;
        
-       list = EmployeeController.viewEmployeeAvailability(Integer.parseInt(temp[temp.length-2].trim()));        
+       list = EmployeeController.viewEmployeeAvailability(Integer.parseInt(temp[temp.length-2].trim()));
        
-       
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"WorkTime ID","Date","Start","Finish"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Business ID","Days","Start","Finish"}, 0);
         if(!list.isEmpty()){
             for(WorkTime workTime:list){
+                List<String> workingDays = new ArrayList<String>();
+                if(workTime.Monday)
+                    workingDays.add("Mon");
+                if(workTime.Tuesday)
+                    workingDays.add("Tue");
+                if(workTime.Wednesday)
+                    workingDays.add("Wed");
+                if(workTime.Thursday)
+                    workingDays.add("Thu");
+                if(workTime.Friday)
+                    workingDays.add("Fri");
+                if(workTime.Saturday)
+                    workingDays.add("Sat");
+                if(workTime.Sunday)
+                    workingDays.add("Sun");
+
+                String daysString = String.join(", ", workingDays);
+
              model.addRow(new Object[]{
-                 workTime.WorkTimeId,
-                 workTime.EndDateTime.format(DateTimeFormatter.ISO_DATE),
+                 workTime.BusinessId, daysString,
                  workTime.StartDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME),
                  workTime.EndDateTime.format(DateTimeFormatter.ISO_LOCAL_TIME),
                  });
              }
         }
-        
+
         tblEmployeeAvailability.setModel(model);
+        tblEmployeeAvailability.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
     }
     
     

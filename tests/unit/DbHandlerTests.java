@@ -19,7 +19,6 @@ import rmitseprocesstools.model.BookingStatus;
 import rmitseprocesstools.model.Business;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.Employee;
-import rmitseprocesstools.model.Schedule;
 
 public class DbHandlerTests {
 	Connection c = null;
@@ -192,50 +191,23 @@ public class DbHandlerTests {
 	}
 	
 	@Test
-	public void CanListSchedules()
-	{
-		List<Schedule> schedules = DbHandler.GetSchedules();
-		Assert.assertEquals(1, schedules.get(0).BusinessId);
-		Assert.assertEquals(LocalDateTime.of(2017, 4, 3, 9, 00), schedules.get(0).StartDateTime);
-		Assert.assertEquals(LocalDateTime.of(2017, 4, 3, 9, 30), schedules.get(0).EndDateTime);
-	}
-	
-	@Test
-	public void CanAddSchedule()
-	{
-		Schedule s = new Schedule();
-		s.ScheduleId = 0;
-		s.BusinessId = 0;
-		s.StartDateTime = LocalDateTime.of(2017, 4, 3, 9, 00);
-		s.EndDateTime = LocalDateTime.of(2017, 4, 3, 9, 30);
-		
-		DbHandler.SaveSchedule(s);
-		List<Schedule> schedules = DbHandler.GetSchedules();
-
-		Assert.assertEquals(s.StartDateTime, schedules.get(3).StartDateTime);
-	}
-	
-	@Test
 	public void CanListBookings()
 	{
 		List<Booking> bookings = DbHandler.GetBookings();
 		
-		Assert.assertEquals(BookingStatus.CONFIRMED, bookings.get(0).Status);
-		Assert.assertTrue(2 == bookings.get(0).ScheduleId);
-		Assert.assertTrue(4 == bookings.get(0).ScheduleId);
+		Assert.assertEquals(BookingStatus.CONFIRMED, bookings.get(0).getStatus());
 	}
 	
 	@Test
 	public void CanAddBooking()
 	{
 		Booking b = new Booking();
-		b.BookingId = 0;
-		b.Status = BookingStatus.CONFIRMED;
-		b.ScheduleId = 2;
+		b.setBookingId(0);
+		b.setStatus(BookingStatus.CONFIRMED);
 		
 		DbHandler.SaveBooking(b);
 		List<Booking> bookings = DbHandler.GetBookings();
 
-		Assert.assertEquals(b.Status, bookings.get(2).Status);
+		Assert.assertEquals(b.getStatus(), bookings.get(2).getStatus());
 	}
 }

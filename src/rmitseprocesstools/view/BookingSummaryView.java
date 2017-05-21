@@ -24,14 +24,16 @@ public class BookingSummaryView extends javax.swing.JFrame {
        List <Booking> list = new ArrayList();
        list = BookingController.getBookingSummaryList(txtTitle);        
         
-        DefaultTableModel model = new DefaultTableModel(new Object[]{"Booking ID", "Schedule ID","Person ID","Status","Date"}, 0);
+        DefaultTableModel model = new DefaultTableModel(new Object[]{"Booking ID","Person ID","Status","Date","Start Time","End Time", "Activity"}, 0);
         for(Booking booking:list){
              model.addRow(new Object[]{
-                 booking.BookingId,
-                 BookingController.getScheduleById(booking.ScheduleId),
-                 BookingController.getCustomerNameById(booking.PersonForId),
-                 booking.Status,
-                 booking.BookingDate.format(DateTimeFormatter.ISO_DATE)});
+                 booking.getBookingId(),
+                 BookingController.getCustomerNameById(booking.getPersonForId()),
+                 booking.getStatus(),
+                 booking.getBookingDate().format(DateTimeFormatter.ISO_DATE),
+                 booking.getStartDateTime().format(DateTimeFormatter.ISO_TIME),
+                 booking.getEndDateTime().format(DateTimeFormatter.ISO_TIME),
+                BookingController.GetBookingActivityName(booking.getBookingId())});
         }
         tblSummary.setModel(model);
     }

@@ -12,7 +12,6 @@ import rmitseprocesstools.model.BookingStatus;
 import rmitseprocesstools.model.Business;
 import rmitseprocesstools.model.Customer;
 import rmitseprocesstools.model.Employee;
-import rmitseprocesstools.model.Schedule;
 import rmitseprocesstools.model.WorkTime;
 import rmitseprocesstools.model.Activity;
 
@@ -288,71 +287,6 @@ private static void Init()
 	  }
   }
   
-//-----------------------Schedule------------------------
-  
-  public static List<Schedule> GetSchedules()
-  {
-	  Init();
-	  List<Schedule> returnList = new ArrayList<Schedule>();
-	  
-	  try {
-		  s = c.createStatement();
-		  ResultSet rs = s.executeQuery( "SELECT * FROM Schedule;" );
-		  while ( rs.next() ) {
-			  Schedule temp = new Schedule();
-    	 
-			  temp.ScheduleId = rs.getInt("ScheduleId");
-			  temp.BusinessId = rs.getInt("BusinessId");
-			  temp.StartDateTime = LocalDateTime.ofEpochSecond(rs.getInt("StartDateTime"), 0, ZoneOffset.ofHours(10));
-			  temp.EndDateTime = LocalDateTime.ofEpochSecond(rs.getInt("EndDateTime"), 0, ZoneOffset.ofHours(10));
-			  
-			  returnList.add(temp);
-		  }
-		  rs.close();
-		  s.close();
-	  } catch (Exception ex) {
-		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
-	  }
-      
-      return returnList;
-  }
-  
-  public static void SaveSchedule(Schedule s)
-  {
-	  Init();
-	  String sql = "";
-	  
-	  try {
-		  if(s.ScheduleId == 0)
-		  {
-			  sql = "INSERT INTO Schedule (BusinessId, StartDateTime, EndDateTime) " +
-					"VALUES (?, ?, ?)";
-		  }else{
-			  sql = "UPDATE Schedule " +
-		            "SET BusinessId = ?, StartDateTime = ?, EndDateTime = ? " +
-				    "WHERE ScheduleId = ?";
-		  }
-		  
-		  p = c.prepareStatement(sql);
-		  
-		  p.setInt(1, s.BusinessId);
-		  p.setLong(2, s.StartDateTime.toEpochSecond(ZoneOffset.ofHours(10)));
-		  p.setLong(3, s.EndDateTime.toEpochSecond(ZoneOffset.ofHours(10)));
-		  
-		  if(s.ScheduleId != 0)
-			  p.setInt(4, s.ScheduleId);
-		  
-		  p.execute();
-		  
-		  if(s.ScheduleId == 0)
-			  s.ScheduleId = p.getGeneratedKeys().getInt(1);
-		  
-		  p.close();
-	  } catch (Exception ex) {
-		  System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
-	  }
-  }
-  
 //-----------------------Booking------------------------
   
   public static List<Booking> GetBookings()
@@ -365,14 +299,14 @@ private static void Init()
 		  ResultSet rs = s.executeQuery( "SELECT * FROM Booking;" );
 		  while ( rs.next() ) {
 			  Booking temp = new Booking();
-    	 
-			  temp.BookingId = rs.getInt("BookingId");
-                          temp.EmployeeId = rs.getInt("EmployeeId");
-                          temp.ActivityId = rs.getInt("ActivityId");
-                          temp.ScheduleId = rs.getInt("ScheduleId");
-                          temp.PersonForId = rs.getInt("PersonForId");
-			  temp.Status = BookingStatus.values()[rs.getInt("Status")];                          
-                          temp.BookingDate = LocalDateTime.ofEpochSecond(rs.getInt("BookingDate"), 0, ZoneOffset.ofHours(10));
+			  temp.setBookingId(rs.getInt("BookingId"));
+			  temp.setEmployeeId(rs.getInt("EmployeeId"));
+			  temp.setActivityId(rs.getInt("ActivityId"));
+			  temp.setPersonForId(rs.getInt("PersonForId"));
+			  temp.setStatus(BookingStatus.values()[rs.getInt("Status")]);
+			  temp.setBookingDate(LocalDateTime.ofEpochSecond(rs.getInt("BookingDate"), 0, ZoneOffset.ofHours(10)));
+			  temp.setStartDateTime(LocalDateTime.ofEpochSecond(rs.getInt("StartDateTime"), 0, ZoneOffset.ofHours(10)));
+			  temp.setEndDateTime(LocalDateTime.ofEpochSecond(rs.getInt("EndDateTime"), 0, ZoneOffset.ofHours(10)));
                           
 			  returnList.add(temp);
 		  }
@@ -400,17 +334,17 @@ private static void Init()
 
                 ResultSet rs = s.executeQuery(sql);
                 while ( rs.next() ) {
-                        Booking temp = new Booking();
-
-                        temp.BookingId = rs.getInt("BookingId");
-                        temp.EmployeeId = rs.getInt("EmployeeId");
-                        temp.ActivityId = rs.getInt("ActivityId");
-                        temp.ScheduleId = rs.getInt("ScheduleId");
-                        temp.PersonForId = rs.getInt("PersonForId");
-                        temp.BookingDate = LocalDateTime.ofEpochSecond(rs.getInt("BookingDate"), 0, ZoneOffset.ofHours(10));
-                        temp.Status = BookingStatus.values()[rs.getInt("Status")];
+					Booking temp = new Booking();
+					temp.setBookingId(rs.getInt("BookingId"));
+					temp.setEmployeeId(rs.getInt("EmployeeId"));
+					temp.setActivityId(rs.getInt("ActivityId"));
+					temp.setPersonForId(rs.getInt("PersonForId"));
+					temp.setBookingDate(LocalDateTime.ofEpochSecond(rs.getInt("BookingDate"), 0, ZoneOffset.ofHours(10)));
+					temp.setStatus(BookingStatus.values()[rs.getInt("Status")]);
+					temp.setStartDateTime(LocalDateTime.ofEpochSecond(rs.getInt("StartDateTime"), 0, ZoneOffset.ofHours(10)));
+					temp.setEndDateTime(LocalDateTime.ofEpochSecond(rs.getInt("EndDateTime"), 0, ZoneOffset.ofHours(10)));
                         
-                        returnList.add(temp);
+					returnList.add(temp);
                 }
                 rs.close();
                 s.close();
@@ -429,29 +363,30 @@ private static void Init()
 	  String sql =  "";
 	  
 	  try {
-		  if(b.BookingId == 0)
+		  if(b.getBookingId() == 0)
 		  {
-			  sql = "INSERT INTO Booking (EmployeeId,ActivityId,ScheduleId,PersonForId,Status,BookingDate) " +
-					"VALUES (?,?,?,?,?,?)";
+			  sql = "INSERT INTO Booking (EmployeeId,ActivityId,PersonForId,Status,BookingDate,StartDateTime,EndDateTime) " +
+					"VALUES (?,?,?,?,?,?,?)";
 		  }else{
-			  sql = "UPDATE Booking SET EmployeeId = ?, ActivityId = ?, ScheduleId = ?, PersonForId = ?, Status = ?, BookingDate = ? WHERE BookingId = ?";
+			  sql = "UPDATE Booking SET EmployeeId = ?, ActivityId = ?, PersonForId = ?, Status = ?, BookingDate = ?, StartDateTime = ?, EndDateTime = ? WHERE BookingId = ?";
 		  }
 		  
 		  p = c.prepareStatement(sql);		  
 		              
-                  p.setInt(1, b.EmployeeId);
-                  p.setInt(2, b.ActivityId);
-                  p.setInt(3, b.ScheduleId);
-                  p.setInt(4, b.PersonForId);
-                  p.setInt(5, b.Status.ordinal());                  
-                  p.setLong(6, b.BookingDate.toEpochSecond(ZoneOffset.ofHours(10)));
-		  if(b.BookingId != 0)
-			  p.setInt(7, b.BookingId);
+                  p.setInt(1, b.getEmployeeId());
+                  p.setInt(2, b.getActivityId());
+                  p.setInt(3, b.getPersonForId());
+                  p.setInt(4, b.getStatus().ordinal());
+		  		p.setLong(5, b.getBookingDate().toEpochSecond(ZoneOffset.ofHours(10)));
+		  		p.setLong(6, b.getStartDateTime().toEpochSecond(ZoneOffset.ofHours(10)));
+		  		p.setLong(7, b.getEndDateTime().toEpochSecond(ZoneOffset.ofHours(10)));
+		  if(b.getBookingId() != 0)
+			  p.setInt(8, b.getBookingId());
 		  
 		  p.execute();
 		  
-		  if(b.BookingId == 0)
-			  b.BookingId = p.getGeneratedKeys().getInt(1);
+		  if(b.getBookingId() == 0)
+			  b.setBookingId(p.getGeneratedKeys().getInt(1));
 
 		  p.close();
 		
@@ -479,6 +414,13 @@ private static void Init()
 			  temp.BusinessId = rs.getInt("BusinessId");
 			  temp.StartDateTime = LocalDateTime.ofEpochSecond(rs.getInt("StartDateTime"), 0, ZoneOffset.ofHours(10));
 			  temp.EndDateTime = LocalDateTime.ofEpochSecond(rs.getInt("EndDateTime"), 0, ZoneOffset.ofHours(10));
+			  temp.Monday = rs.getBoolean("Monday");
+			  temp.Tuesday = rs.getBoolean("Tuesday");
+			  temp.Wednesday = rs.getBoolean("Wednesday");
+			  temp.Thursday = rs.getBoolean("Thursday");
+			  temp.Friday = rs.getBoolean("Friday");
+			  temp.Saturday = rs.getBoolean("Saturday");
+			  temp.Sunday = rs.getBoolean("Sunday");
 			  
 			  returnList.add(temp);
 		  }
@@ -499,11 +441,11 @@ private static void Init()
 	  try {
 		  if(s.WorkTimeId == 0)
 		  {
-			  sql = "INSERT INTO WorkTime ( EmployeeId, BusinessId, StartDateTime, EndDateTime) " +
+			  sql = "INSERT INTO WorkTime ( EmployeeId, BusinessId, StartDateTime, EndDateTime, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday) " +
 					"VALUES (?, ?, ?, ?)";
 		  }else{
 			  sql = "UPDATE WorkTime " +
-		            "SET EmployeeId = ?, BusinessId = ?, StartDateTime = ?, EndDateTime = ? " +
+		            "SET EmployeeId = ?, BusinessId = ?, StartDateTime = ?, EndDateTime = ?, Monday = ?, Tuesday = ?, Wednesday = ?, Thursday = ?, Friday = ?, Saturday = ?, Sunday = ? " +
 				    "WHERE WorkTimeId = ?";
 		  }
 		  
@@ -513,9 +455,16 @@ private static void Init()
 		  p.setInt(2, s.BusinessId);
 		  p.setLong(3, s.StartDateTime.toEpochSecond(ZoneOffset.ofHours(10)));
 		  p.setLong(4, s.EndDateTime.toEpochSecond(ZoneOffset.ofHours(10)));
+		  p.setBoolean(5, s.Monday);
+		  p.setBoolean(6, s.Tuesday);
+		  p.setBoolean(7, s.Wednesday);
+		  p.setBoolean(8, s.Thursday);
+		  p.setBoolean(9, s.Friday);
+		  p.setBoolean(10, s.Saturday);
+		  p.setBoolean(11, s.Sunday);
 		  
 		  if(s.WorkTimeId != 0)
-			  p.setInt(5, s.WorkTimeId);
+			  p.setInt(12, s.WorkTimeId);
 		  
 		  p.execute();
 		  

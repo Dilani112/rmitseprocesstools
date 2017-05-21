@@ -2,7 +2,9 @@ package rmitseprocesstools.controller;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,27 +49,45 @@ public class EmployeeController {
         return false;
    }
 
-   public boolean addEmployeeWorkTime(int nemployeeID,String nDate,String nShrs, String nFhrs,
-            String nSmins, String nFmins){
+   public boolean addEmployeeWorkTime(int nemployeeID,String nShrs, String nFhrs,
+            String nSmins, String nFmins, boolean monday, boolean tuesday, boolean wednesday,
+            boolean thursday, boolean friday, boolean saturday, boolean sunday){
         LOGGER.entering(getClass().getName(), "addEmployeeWorkTime");
+
+        List<WorkTime> workTimes = DbHandler.GetWorkTime();
 
         AuthController controller = new  AuthController();
         Business business = (Business) AuthController.currentUser; 
         WorkTime newWorkTime = new WorkTime();
        
-        String startDate = nDate+" "+nShrs+":"+nSmins ;
-        String finishDate = nDate+" "+nFhrs+":"+nFmins ;
+        String startDate = nShrs+":"+nSmins ;
+        String finishDate = nFhrs+":"+nFmins ;
         
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime startTime = LocalTime.parse(startDate, format);
+        LocalTime endTime = LocalTime.parse(finishDate, format);
         
         newWorkTime.EmployeeId = nemployeeID;
         newWorkTime.BusinessId = business.BusinessId;
-        newWorkTime.StartDateTime = LocalDateTime.parse(startDate, format);
-        newWorkTime.EndDateTime =  LocalDateTime.parse(finishDate, format);
+        newWorkTime.StartDateTime = LocalDateTime.of(LocalDate.now(), startTime);
+        newWorkTime.EndDateTime =  LocalDateTime.of(LocalDate.now(), endTime);
         if(newWorkTime.EndDateTime.compareTo(newWorkTime.StartDateTime) <= 0){
-            JOptionPane.showMessageDialog(null, "Invalid Start Date/Time and End Date/Time, The End Date/Time can't be the same or earlier than the start time", "", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Invalid Start Time and End Time, The End Time can't be the same or earlier than the start time", "", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+        newWorkTime.Monday = monday;
+        newWorkTime.Tuesday = tuesday;
+        newWorkTime.Wednesday = wednesday;
+        newWorkTime.Thursday = thursday;
+        newWorkTime.Friday = friday;
+        newWorkTime.Saturday = saturday;
+        newWorkTime.Sunday = sunday;
+
+        workTimes.forEach((c) -> {
+            if(c.BusinessId == newWorkTime.BusinessId && c.EmployeeId == newWorkTime.EmployeeId)
+                newWorkTime.WorkTimeId = c.WorkTimeId;
+        });
+
         DbHandler.SaveWorkTime(newWorkTime);
         LOGGER.info("WorkTime " + newWorkTime.WorkTimeId + " was successfully saved.");
         JOptionPane.showMessageDialog(null,"Employee time has been saved.","",JOptionPane.ERROR_MESSAGE);
@@ -91,8 +111,6 @@ public class EmployeeController {
                 
         return employeeAvailabilityList;
     }
-    
-
     
    public List<String> constructCmbEmployeeList(){
    
@@ -143,33 +161,6 @@ public class EmployeeController {
         }
           
         return minsList;
-   }
-    
-    
-    public List<String> constructCmbWorkingDatesList(){
-   
-        List<String> daysList = new ArrayList<String>();
-        
-        int setNumMonths = 1;       
-
-        Calendar sDate = Calendar.getInstance();
-        Calendar fDate = Calendar.getInstance();
-        
-        Date currentDate = new Date();       
-        
-        DateFormat datef = new SimpleDateFormat("dd/MM/YYYY");
-        
-        sDate.setTime(currentDate);
-        sDate.add(Calendar.DATE, 1);
-        fDate.setTime(currentDate);
-        fDate.roll(Calendar.MONTH, setNumMonths);        
-        
-         while (sDate.getTime().before(fDate.getTime()))
-        {
-            daysList.add(datef.format(sDate.getTime()));
-            sDate.add(Calendar.DATE, 1);
-        }
-        return daysList;
    }
            
     public  List<String> constructCmbEmployeeListbyBusinessId()

@@ -9,4 +9,11 @@ public class WorkTime {
         public int BusinessId;	
 	public LocalDateTime StartDateTime;
 	public LocalDateTime EndDateTime;
+    public boolean Monday;
+    public boolean Tuesday;
+    public boolean Wednesday;
+    public boolean Thursday;
+    public boolean Friday;
+    public boolean Saturday;
+    public boolean Sunday;
 }
