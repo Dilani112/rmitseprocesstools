@@ -197,6 +197,7 @@ public class LoginView extends javax.swing.JFrame {
             if(controller.queryBusiness(txtUserName.getText()) !=null)
             {
                try {                                               
+                        viewb.updateBusinessData();
                         viewb.setVisible(true);
                         this.setVisible(false);                
             
