@@ -24,13 +24,19 @@ public class Business extends User {
 	}
 
 	public boolean setName(String input) {
-		Name = input;
-		return true;
+        if(input != null && input != "") {
+            Name = input;
+            return true;
+        }
+        return false;
 	}
         
         public boolean setBusinessName(String input) {
-		BusinessName = input;
-		return true;
+            if(input != null && input != "") {
+                BusinessName = input;
+                return true;
+            }
+            return false;
 	}
 
 	public boolean setAddress(String input) {

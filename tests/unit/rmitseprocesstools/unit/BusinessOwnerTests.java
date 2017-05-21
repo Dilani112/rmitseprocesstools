@@ -5,36 +5,53 @@
  */
 package rmitseprocesstools.unit;
 
-import org.junit.AfterClass;
-import org.junit.Test;
-import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.*;
+import rmitseprocesstools.DbHandler;
 import rmitseprocesstools.controller.AuthController;
 import rmitseprocesstools.controller.BussinessOwnerController;
 import rmitseprocesstools.model.Business;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 /**
  *
  * @author Thejana
  */
 public class BusinessOwnerTests {
-    
+    Connection c = null;
     Business b;
     BussinessOwnerController controller;
-    
-    public BusinessOwnerTests() {
-        b = new AuthController().queryBusiness("b1");
+
+    @Before
+    public void InitializeDbTests()
+    {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:test.db");
+            c.setAutoCommit(false);
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+
+        DbHandler.SetConnection(c);
+        b = new AuthController().queryBusiness("business1");
+        AuthController.currentUser = b;
         controller = new BussinessOwnerController();
     }
-    
-    @BeforeClass
-    public static void setupTestEnv() {
-        AuthController.currentUser = new AuthController().queryBusiness("b1");
-    }
-    
-    @AfterClass
-    public static void destroyTestEnv() {
+
+    @After
+    public void RollbackTestChanges()
+    {
         AuthController.currentUser = null;
+
+        try {
+            c.rollback();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
     }
     
     @Test

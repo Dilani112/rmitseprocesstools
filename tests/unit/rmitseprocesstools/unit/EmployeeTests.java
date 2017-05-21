@@ -5,17 +5,20 @@ package rmitseprocesstools.unit;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import org.junit.After;
-import org.junit.AfterClass;
+
+import org.junit.*;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import org.junit.Test;
-import org.junit.BeforeClass;
+
 import rmitseprocesstools.DbHandler;
 import rmitseprocesstools.controller.AuthController;
 import rmitseprocesstools.controller.EmployeeController;
@@ -49,16 +52,36 @@ public class EmployeeTests {
         
         controller = new EmployeeController();
     }
-    
-    @BeforeClass
-    public static void setupEnv() {
+
+    Connection c = null;
+
+    @Before
+    public void InitializeDbTests()
+    {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            c = DriverManager.getConnection("jdbc:sqlite:test.db");
+            c.setAutoCommit(false);
+        } catch ( Exception e ) {
+            System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+            System.exit(0);
+        }
+
+        DbHandler.SetConnection(c);
         Business b = new AuthController().queryBusiness("b1");
         AuthController.currentUser = b;
     }
-    
-    @AfterClass
-    public static void destroyTestEnv() {
+
+    @After
+    public void RollbackTestChanges()
+    {
         AuthController.currentUser = null;
+
+        try {
+            c.rollback();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
     }
     
     @Test
@@ -71,13 +94,12 @@ public class EmployeeTests {
     
     @Test(expected = Exception.class)
     public void failAddEmployeeWorkTime() {
-        assertEquals(false, controller.addEmployeeWorkTime(empId,null,null,null,null,null));
-        assertEquals(false, controller.addEmployeeWorkTime(empId,"","","","",""));
-        assertEquals(false, controller.addEmployeeWorkTime(empId,startH,startH,startH,startH,startH));
-        assertEquals(false, controller.addEmployeeWorkTime(empId, "", startH, endH, startM, endM));
-        assertEquals(false, controller.addEmployeeWorkTime(empId, startDate, "", endH, startM, endM));
-        assertEquals(false, controller.addEmployeeWorkTime(empId, startDate, startH, "", startM, endM));
-        assertEquals(false, controller.addEmployeeWorkTime(empId, startDate, startH, endH, "", endM));
-        assertEquals(false, controller.addEmployeeWorkTime(empId, startDate, startH, endH, startM, ""));
+        assertEquals(false, controller.addEmployeeWorkTime(empId,null,null,null,null,true,true,true,true,true,false,false));
+        assertEquals(false, controller.addEmployeeWorkTime(empId,"","","","",true,true,true,true,true,false,false));
+        assertEquals(false, controller.addEmployeeWorkTime(empId,startH,startH,startH,startH,true,true,true,true,true,false,false));
+        assertEquals(false, controller.addEmployeeWorkTime(empId, "", endH, startM, endM, true,true,true,true,true,false,false));
+        assertEquals(false, controller.addEmployeeWorkTime(empId, startH, "", startM, endM, true,true,true,true,true,false,false));
+        assertEquals(false, controller.addEmployeeWorkTime(empId, startH, endH, "", endM, true,true,true,true,true,false,false));
+        assertEquals(false, controller.addEmployeeWorkTime(empId, startH, endH, startM, "", true,true,true,true,true,false,false));
     }
 }

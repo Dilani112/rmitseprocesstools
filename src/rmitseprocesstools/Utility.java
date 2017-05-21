@@ -67,7 +67,7 @@ public class Utility {
     
     public Boolean validateAddress(String text)
     {
-        if (text!=null)
+        if (text != null && text != "")
         {        
             String stringRegex = "[a-zA-Z0-9\\-'\\s\\,\\.\\#\\/]+";
             Pattern stringPattern = Pattern.compile(stringRegex);
